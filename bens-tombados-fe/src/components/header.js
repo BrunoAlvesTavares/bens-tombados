@@ -16,6 +16,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import BookIcon from '@mui/icons-material/Book';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import GavelIcon from '@mui/icons-material/Gavel'; // Ícone de "Ato Legal"
+import LocationOnIcon from '@mui/icons-material/LocationOn'; // Ícone de "Distrito"
+import LocationCityIcon from '@mui/icons-material/LocationCity'; // Novo ícone de "Município"
 import { Link } from 'react-router-dom'; // Importar Link para navegação
 
 export default function Header({ title }) {
@@ -79,9 +82,9 @@ export default function Header({ title }) {
         <Box sx={{ width: '250px' }}>
           <nav aria-label="main mailbox folders">
             <List>
-              {/* Usando Link para navegação */}
+              {/* Usando Link para navegação e fechando o menu ao clicar */}
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/livro-tombo"> {/* Altere para Link */}
+                <ListItemButton component={Link} to="/livro-tombo" onClick={handleClose}> {/* Altere para Link */}
                   <ListItemIcon>
                     <BookIcon />
                   </ListItemIcon>
@@ -89,26 +92,27 @@ export default function Header({ title }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton component={Link} to="/ato-legal" onClick={handleClose}> {/* Altere para Link */}
                   <ListItemIcon>
-                    <DraftsIcon />
+                    <GavelIcon /> {/* Ícone de Ato Legal */}
                   </ListItemIcon>
-                  <ListItemText primary="Drafts" />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </nav>
-          <Divider />
-          <nav aria-label="secondary mailbox folders">
-            <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Trash" />
+                  <ListItemText primary="Ato Legal" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="#simple-list">
-                  <ListItemText primary="Spam" />
+                <ListItemButton component={Link} to="/distrito" onClick={handleClose}> {/* Altere para Link */}
+                  <ListItemIcon>
+                    <LocationOnIcon /> {/* Ícone de Distrito */}
+                  </ListItemIcon>
+                  <ListItemText primary="Distrito" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton component={Link} to="/municipio" onClick={handleClose}> {/* Altere para Link */}
+                  <ListItemIcon>
+                    <LocationCityIcon /> {/* Novo ícone de Município */}
+                  </ListItemIcon>
+                  <ListItemText primary="Município" />
                 </ListItemButton>
               </ListItem>
             </List>
