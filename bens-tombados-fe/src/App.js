@@ -5,6 +5,7 @@ import Header from './components/header'; // Importe o Header
 import LivroTombo from './pages/livro-tombo/livro-tombo'; // Importe o componente Livro Tombo
 import AdicionarLivro from './pages/livro-tombo/adicionar-livro';
 import AtoLegal from './pages/ato-legal/ato-legal'; // Importe o componente Ato Legal
+import AdicionarAtoLegal from './pages/ato-legal/adicionar-ato-legal'; 
 import Distrito from './pages/distrito/distrito';
 import Municipio from './pages/municipio/municipio';
 import Categoria from './pages/categoria/categoria';
@@ -80,6 +81,7 @@ function App() {
           <Route path="/subclasse" element={<SubClasse />} />
           <Route path="/processo" element={<Processo />} />
           <Route path="/adicionar-livro" element={<AdicionarLivro />} />
+          <Route path="/adicionar-ato-legal" element={<AdicionarAtoLegal />} />
         </Routes>
       </div>
     </Router>
