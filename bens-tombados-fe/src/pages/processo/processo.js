@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
 
-const API_URL = 'http://localhost:3000/processos'; // Atualize com a URL correta do backend
+const API_URL = 'http://localhost:3000/processos';
 
 const headCells = [
   { id: 'idProcesso', numeric: true, disablePadding: false, label: 'ID Processo' },
