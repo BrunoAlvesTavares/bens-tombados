@@ -9,7 +9,9 @@ import AdicionarAtoLegal from './pages/ato-legal/adicionar-ato-legal';
 import Distrito from './pages/distrito/distrito';
 import Municipio from './pages/municipio/municipio';
 import Categoria from './pages/categoria/categoria';
+import AdicionarCategoria from './pages/categoria/adicionar-categoria'
 import Classe from './pages/classe/classe';
+import AdicionarClasse from './pages/classe/adicionar-classe';
 import SubClasse from './pages/subclasse/subclasse';
 import Processo from './pages/processo/processo';
 import Paper from '@mui/material/Paper'; // Importando o Paper do Material UI
@@ -82,6 +84,8 @@ function App() {
           <Route path="/processo" element={<Processo />} />
           <Route path="/adicionar-livro" element={<AdicionarLivro />} />
           <Route path="/adicionar-ato-legal" element={<AdicionarAtoLegal />} />
+          <Route path="/adicionar-categoria" element={<AdicionarCategoria />} />
+          <Route path="/adicionar-classe" element={<AdicionarClasse />} />
         </Routes>
       </div>
     </Router>
