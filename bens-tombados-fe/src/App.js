@@ -4,9 +4,13 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Importe as funcionalidades de roteamento
 import Header from './components/header'; // Importe o Header
 import LivroTombo from './pages/livro-tombo/livro-tombo'; // Importe o componente Livro Tombo
-import AtoLegal from './pages/ato-legal'; // Importe o componente Ato Legal
-import Distrito from './pages/distrito';
-import Municipio from './pages/municipio';
+import AtoLegal from './pages/ato-legal/ato-legal'; // Importe o componente Ato Legal
+import Distrito from './pages/distrito/distrito';
+import Municipio from './pages/municipio/municipio';
+import Categoria from './pages/categoria/categoria';
+import Classe from './pages/classe/classe';
+import SubClasse from './pages/subclasse/subclasse';
+import Processo from './pages/processo/processo';
 
 function App() {
   return (
@@ -29,6 +33,10 @@ function App() {
           <Route path="/ato-legal" element={<AtoLegal />} />
           <Route path="/distrito" element={<Distrito />} />
           <Route path="/municipio" element={<Municipio />} />
+          <Route path="/categoria" element={<Categoria />} />
+          <Route path="/classe" element={<Classe/>} />
+          <Route path="/subclasse" element={<SubClasse />} />
+          <Route path="/processo" element={<Processo />} />
         </Routes>
       </div>
     </Router>
