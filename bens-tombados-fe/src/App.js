@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Importe as funcionalidades de roteamento
 import Header from './components/header'; // Importe o Header
 import LivroTombo from './pages/livro-tombo/livro-tombo'; // Importe o componente Livro Tombo
+import AdicionarLivro from './pages/livro-tombo/adicionar-livro';
 import AtoLegal from './pages/ato-legal/ato-legal'; // Importe o componente Ato Legal
 import Distrito from './pages/distrito/distrito';
 import Municipio from './pages/municipio/municipio';
@@ -78,6 +79,7 @@ function App() {
           <Route path="/classe" element={<Classe />} />
           <Route path="/subclasse" element={<SubClasse />} />
           <Route path="/processo" element={<Processo />} />
+          <Route path="/adicionar-livro" element={<AdicionarLivro />} />
         </Routes>
       </div>
     </Router>

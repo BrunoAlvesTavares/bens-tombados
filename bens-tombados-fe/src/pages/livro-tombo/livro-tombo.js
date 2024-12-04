@@ -212,6 +212,7 @@ export default function EnhancedTable() {
           position: 'fixed',
           bottom: 16,
           right: 16,
+          backgroundColor: '#D50032',
         }}
         onClick={() => navigate('/adicionar-livro')}
       >
