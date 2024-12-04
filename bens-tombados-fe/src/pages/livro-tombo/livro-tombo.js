@@ -12,14 +12,13 @@ import {
   Paper,
   Checkbox,
   Fab,
-  Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
 
-const API_URL = 'http://localhost:3000/livros-tombo'; // Atualize com a URL correta do backend
+const API_URL = 'http://localhost:3000/livros-tombo';
 
 const headCells = [
   { id: 'idLivro', numeric: true, disablePadding: false, label: 'ID Livro' },
@@ -47,7 +46,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-        <TableCell padding="checkbox">
+        <TableCell padding="checkbox" align="center">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -59,8 +58,9 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align="center"
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ fontWeight: 'bold' }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -141,11 +141,6 @@ export default function EnhancedTable() {
         alignItems: 'center',
       }}
     >
-      {/* Título acima da tabela */}
-      <Typography variant="h4" component="h1" sx={{ mb: 3, fontWeight: 'bold', color: '#333' }}>
-        Livro Tombo
-      </Typography>
-
       <Paper
         sx={{
           width: '100%',
@@ -183,17 +178,17 @@ export default function EnhancedTable() {
                       cursor: 'pointer',
                     }}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell padding="checkbox" align="center">
                       <Checkbox
                         color="primary"
                         checked={selected.includes(row.idLivro)}
                         onChange={() => {}}
                       />
                     </TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idLivro}
                     </TableCell>
-                    <TableCell align="left">{row.nomeLivro}</TableCell>
+                    <TableCell align="center">{row.nomeLivro}</TableCell>
                   </TableRow>
                 ))
               )}
