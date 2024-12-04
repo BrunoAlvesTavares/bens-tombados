@@ -8,5 +8,6 @@ import { Subclasse } from './entities/subclasse.entity';
   imports: [TypeOrmModule.forFeature([Subclasse])],
   controllers: [SubclasseController],
   providers: [SubclasseService],
+  exports: [SubclasseService],
 })
 export class SubclasseModule {}

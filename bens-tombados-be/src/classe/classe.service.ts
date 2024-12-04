@@ -1,17 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Classe } from './entities/classe.entity';
+import { SubclasseService } from 'src/subclasse/subclasse.service';
 
 @Injectable()
 export class ClasseService {
   constructor(
     @InjectRepository(Classe)
     private readonly classeRepository: Repository<Classe>,
+    private readonly subclasseService: SubclasseService,
   ) {}
 
   async create(data: Partial<Classe>): Promise<Classe> {
-    const novaClasse = this.classeRepository.create(data);
+    let subclasses = [];
+    if (data.subclasses && data.subclasses.length > 0) {
+      const subclassIds = data.subclasses as unknown as number[];
+
+      subclasses = await this.subclasseService.findByIds(subclassIds);
+
+      if (subclasses.length !== subclassIds.length) {
+        const notFoundIds = subclassIds.filter(
+          (id) => !subclasses.some((subclass) => subclass.idSubclasse === id),
+        );
+        throw new NotFoundException(
+          `Subclasses com os IDs ${notFoundIds.join(', ')} não foram encontradas.`,
+        );
+      }
+    }
+
+    const novaClasse = this.classeRepository.create({
+      nomeClasse: data.nomeClasse,
+      subclasses,
+    });
+
     return this.classeRepository.save(novaClasse);
   }
 

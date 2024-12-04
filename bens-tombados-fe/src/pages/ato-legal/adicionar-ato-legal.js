@@ -83,7 +83,7 @@ export default function AdicionarAtoLegal() {
           onChange={(e) => setDataDecreto(e.target.value)}
           required
           InputLabelProps={{
-            shrink: true, // Faz com que o label fique acima e visível, mesmo quando o campo não está preenchido.
+            shrink: true,
           }}
           sx={{
             mb: 3,

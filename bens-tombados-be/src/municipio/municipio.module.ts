@@ -8,5 +8,6 @@ import { Municipio } from './entities/municipio.entity';
   imports: [TypeOrmModule.forFeature([Municipio])],
   providers: [MunicipioService],
   controllers: [MunicipioController],
+  exports: [MunicipioService],
 })
 export class MunicipioModule {}

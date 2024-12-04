@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Box, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/classes';
+const API_CLASSES = 'http://localhost:3000/classes';
+const API_SUBCLASSES = 'http://localhost:3000/subclasse';
 
 export default function AdicionarClasse() {
   const [nomeClasse, setNomeClasse] = useState('');
-  const [subclasses, setSubclasses] = useState('');
+  const [selectedSubclasses, setSelectedSubclasses] = useState([]);
+  const [subclassesOptions, setSubclassesOptions] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchSubclasses() {
+      try {
+        const response = await axios.get(API_SUBCLASSES);
+        setSubclassesOptions(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar subclasses:', error);
+        alert('Erro ao carregar as opções de subclasses.');
+      }
+    }
+
+    fetchSubclasses();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const newClasse = {
       nomeClasse: nomeClasse,
-      subclasses: subclasses.split(',').map(subclass => subclass.trim()), // Divide a string de subclasses e remove espaços extras
+      subclasses: selectedSubclasses,
     };
 
     try {
-      await axios.post(API_URL, newClasse);
+      await axios.post(API_CLASSES, newClasse);
       alert('Classe adicionada com sucesso!');
-      navigate('/'); // Redireciona para a página principal após a adição
+      navigate('/');
     } catch (error) {
       console.error('Erro ao adicionar classe:', error);
       alert('Erro ao adicionar classe.');
@@ -75,35 +91,29 @@ export default function AdicionarClasse() {
             },
           }}
         />
-        <TextField
-          label="Subclasses (separadas por vírgula)"
-          fullWidth
-          value={subclasses}
-          onChange={(e) => setSubclasses(e.target.value)}
-          required
-          multiline
-          rows={4}
-          sx={{
-            mb: 3,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#BDBDBD',
-              },
-              '&:hover fieldset': {
-                borderColor: '#BDBDBD',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#D50032',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#BDBDBD',
-            },
-            '& .MuiInputLabel-root.Mui-focused': {
-              color: '#D50032',
-            },
-          }}
-        />
+
+        <FormControl fullWidth sx={{ mb: 3 }}>
+          <InputLabel id="subclasses-label">Subclasses</InputLabel>
+          <Select
+            labelId="subclasses-label"
+            multiple
+            value={selectedSubclasses}
+            onChange={(e) => setSelectedSubclasses(e.target.value)}
+            renderValue={(selected) =>
+              subclassesOptions
+                .filter((subclass) => selected.includes(subclass.idSubclasse))
+                .map((subclass) => subclass.nomeSubclasse)
+                .join(', ')
+            }
+          >
+            {subclassesOptions.map((subclass) => (
+              <MenuItem key={subclass.idSubclasse} value={subclass.idSubclasse}>
+                {subclass.nomeSubclasse}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <Button
           variant="contained"
           color="primary"

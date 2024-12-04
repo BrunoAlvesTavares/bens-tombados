@@ -1,11 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Subclasse } from 'src/subclasse/entities/subclasse.entity';
 
-@Entity()
+@Entity('Classe')
 export class Classe {
   @PrimaryGeneratedColumn()
   idClasse: number;
 
   @Column({ length: 100 })
   nomeClasse: string;
-  subclasses: any;
+
+  @OneToMany(() => Subclasse, (subclasse) => subclasse.classe, {
+    cascade: true,
+  })
+  subclasses: Subclasse[];
 }

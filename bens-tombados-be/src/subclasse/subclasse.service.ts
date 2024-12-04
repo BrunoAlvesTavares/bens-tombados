@@ -18,6 +18,25 @@ export class SubclasseService {
     return this.subclasseRepository.findOneBy({ idSubclasse: id });
   }
 
+  async findByIds(ids: number[]): Promise<Subclasse[]> {
+    if (!ids || ids.length === 0) {
+      return [];
+    }
+
+    const subclasses = await this.subclasseRepository.findByIds(ids);
+
+    if (subclasses.length !== ids.length) {
+      const notFoundIds = ids.filter(
+        (id) => !subclasses.some((subclass) => subclass.idSubclasse === id),
+      );
+      throw new NotFoundException(
+        `Subclasses com os IDs ${notFoundIds.join(', ')} não foram encontradas`,
+      );
+    }
+
+    return subclasses;
+  }
+
   async create(subclasse: Subclasse): Promise<Subclasse> {
     return this.subclasseRepository.save(subclasse);
   }

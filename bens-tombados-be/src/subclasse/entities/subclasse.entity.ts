@@ -1,4 +1,3 @@
-import { Classe } from 'src/classe/entities/classe.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,8 +5,9 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { Classe } from 'src/classe/entities/classe.entity';
 
-@Entity()
+@Entity('Subclasse')
 export class Subclasse {
   @PrimaryGeneratedColumn()
   idSubclasse: number;

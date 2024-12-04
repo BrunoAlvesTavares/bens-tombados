@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Municipio } from './entities/municipio.entity';
 
 @Injectable()
@@ -21,6 +21,12 @@ export class MunicipioService {
 
   async findOne(id: number): Promise<Municipio> {
     return this.municipioRepository.findOneBy({ idMunicipio: id });
+  }
+
+  async findWhere(
+    where: FindOptionsWhere<Municipio>,
+  ): Promise<Municipio | null> {
+    return this.municipioRepository.findOne({ where });
   }
 
   async update(id: number, data: Partial<Municipio>): Promise<Municipio> {

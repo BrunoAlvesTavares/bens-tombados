@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Distrito } from './entities/distrito.entity';
+import { MunicipioService } from 'src/municipio/municipio.service';
 
 @Injectable()
 export class DistritoService {
   constructor(
     @InjectRepository(Distrito)
     private readonly distritoRepository: Repository<Distrito>,
+    private readonly municipioService: MunicipioService,
   ) {}
 
   findAll() {
@@ -21,8 +23,20 @@ export class DistritoService {
     });
   }
 
-  create(distrito: Partial<Distrito>) {
-    const newDistrito = this.distritoRepository.create(distrito);
+  async create(distrito: Partial<Distrito>) {
+    const municipio = await this.municipioService.findWhere({
+      idMunicipio: distrito.municipio as unknown as number,
+    });
+
+    if (!municipio) {
+      throw new NotFoundException('Município não encontrado');
+    }
+
+    const newDistrito = this.distritoRepository.create({
+      nomeDistrito: distrito.nomeDistrito,
+      municipio,
+    });
+
     return this.distritoRepository.save(newDistrito);
   }
 
