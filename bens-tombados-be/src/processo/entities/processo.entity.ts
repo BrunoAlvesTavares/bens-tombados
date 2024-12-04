@@ -13,6 +13,7 @@ import { AtoLegal } from 'src/ato-legal/entities/ato-legal.entity';
 import { Classe } from 'src/classe/entities/classe.entity';
 import { LivroTombo } from 'src/livro-tombo/entities/livro-tombo.entity';
 import { Distrito } from 'src/distrito/entities/distrito.entity';
+import { Subclasse } from 'src/subclasse/entities/subclasse.entity';
 
 @Entity()
 export class Processo {
@@ -59,4 +60,15 @@ export class Processo {
     inverseJoinColumn: { name: 'idLivro', referencedColumnName: 'idLivro' },
   })
   livros: LivroTombo[];
+
+  @ManyToMany(() => Subclasse, { cascade: true, eager: true })
+  @JoinTable({
+    name: 'Processo_Subclasse',
+    joinColumn: { name: 'idProcesso', referencedColumnName: 'idProcesso' },
+    inverseJoinColumn: {
+      name: 'idSubclasse',
+      referencedColumnName: 'idSubclasse',
+    },
+  })
+  subclasses: Subclasse[];
 }

@@ -9,6 +9,7 @@ import { LivroTomboModule } from './livro-tombo/livro-tombo.module';
 import { ClasseModule } from './classe/classe.module';
 import { ProcessoModule } from './processo/processo.module';
 import { DistritoModule } from './distrito/distrito.module';
+import { SubclasseModule } from './subclasse/subclasse.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { DistritoModule } from './distrito/distrito.module';
     ClasseModule,
     ProcessoModule,
     DistritoModule,
+    SubclasseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

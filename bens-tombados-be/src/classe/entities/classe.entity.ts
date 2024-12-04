@@ -7,4 +7,5 @@ export class Classe {
 
   @Column({ length: 100 })
   nomeClasse: string;
+  subclasses: any;
 }
