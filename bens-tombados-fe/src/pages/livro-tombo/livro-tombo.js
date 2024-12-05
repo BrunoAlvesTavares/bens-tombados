@@ -12,22 +12,24 @@ import {
   Paper,
   Checkbox,
   Fab,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
 
 const API_URL = 'http://localhost:3000/livros-tombo';
 
-const headCells = [
-  { id: 'idLivro', numeric: true, disablePadding: false, label: 'ID Livro' },
-  { id: 'nomeLivro', numeric: false, disablePadding: true, label: 'Nome Livro' },
-];
-
+// Função de ordenação (mantida)
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) return -1;
-  if (b[orderBy] > a[orderBy]) return 1;
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
   return 0;
 }
 
@@ -37,45 +39,35 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+// Função de cabeçalho da tabela
 function EnhancedTableHead(props) {
-  const { order, orderBy, onSelectAllClick, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, rowCount, numSelected, onSelectAllClick } = props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   return (
     <TableHead>
-      <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-        <TableCell padding="checkbox" align="center">
+      <TableRow>
+        <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all books' }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ fontWeight: 'bold' }}
+        <TableCell sortDirection={orderBy === 'idLivro' ? order : false}>
+          <TableSortLabel
+            active={orderBy === 'idLivro'}
+            direction={orderBy === 'idLivro' ? order : 'asc'}
+            onClick={createSortHandler('idLivro')}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+            ID Livro
+          </TableSortLabel>
+        </TableCell>
+        <TableCell>Nome do Livro</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -120,6 +112,31 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
+  const handleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((row) => row.idLivro);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selected.map((id) => axios.delete(`${API_URL}/${id}`)));
+      setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.idLivro)));
+      setSelected([]);
+    } catch (error) {
+      console.error('Erro ao excluir dados:', error);
+    }
+  };
+
   const visibleRows = React.useMemo(
     () =>
       rows
@@ -158,6 +175,7 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               rowCount={rows.length}
               onRequestSort={handleRequestSort}
+              onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
               {loading ? (
@@ -179,10 +197,16 @@ export default function EnhancedTable() {
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
-                      <Checkbox
-                        color="primary"
-                        checked={selected.includes(row.idLivro)}
-                        onChange={() => {}}
+                    <Checkbox
+                      color="error" // Troca a cor padrão para vermelho
+                      checked={selected.includes(row.idLivro)}
+                      onChange={() => handleSelect(row.idLivro)}
+                      sx={{
+                      // Se você quiser garantir que a cor fique vermelha ao ser marcada
+                      '&.Mui-checked': {
+                      color: '#D50032', // Cor vermelha personalizada
+                      },
+                      }}
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
@@ -206,6 +230,15 @@ export default function EnhancedTable() {
           sx={{ borderTop: '1px solid #ddd', backgroundColor: '#fafafa' }}
         />
       </Paper>
+      {selected.length > 0 && (
+        <IconButton
+          color="error"
+          sx={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
       <Fab
         color="primary"
         sx={{
