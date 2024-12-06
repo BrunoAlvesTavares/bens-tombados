@@ -48,28 +48,28 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
-        <TableCell sortDirection={orderBy === 'idLivro' ? order : false}>
-          <TableSortLabel
-            active={orderBy === 'idLivro'}
-            direction={orderBy === 'idLivro' ? order : 'asc'}
-            onClick={createSortHandler('idLivro')}
-          >
-            ID Livro
-          </TableSortLabel>
-        </TableCell>
-        <TableCell>Nome do Livro</TableCell>
-      </TableRow>
-    </TableHead>
+<TableHead>
+  <TableRow>
+    <TableCell padding="checkbox" align="center">
+      <Checkbox
+        color="error"
+        indeterminate={numSelected > 0 && numSelected < rowCount}
+        checked={rowCount > 0 && numSelected === rowCount}
+        onChange={onSelectAllClick}
+      />
+    </TableCell>
+    <TableCell align="center" sortDirection={orderBy === 'idLivro' ? order : false}>
+      <TableSortLabel
+        active={orderBy === 'idLivro'}
+        direction={orderBy === 'idLivro' ? order : 'asc'}
+        onClick={createSortHandler('idLivro')}
+      >
+        ID Livro
+      </TableSortLabel>
+    </TableCell>
+    <TableCell align="center">Nome do Livro</TableCell>
+  </TableRow>
+</TableHead>
   );
 }
 
@@ -236,7 +236,7 @@ export default function EnhancedTable() {
           sx={{ position: 'fixed', bottom: 80, right: 16 }}
           onClick={handleDelete}
         >
-          <DeleteIcon />
+          <DeleteIcon sx={{ fontSize: 32 }} />
         </IconButton>
       )}
       <Fab

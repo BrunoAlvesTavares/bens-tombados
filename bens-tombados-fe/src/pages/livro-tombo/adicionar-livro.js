@@ -19,7 +19,7 @@ export default function AdicionarLivro() {
     try {
       await axios.post(API_URL, newLivro);
       alert('Livro adicionado com sucesso!');
-      navigate('/');
+      navigate('/adicionar-livro');
     } catch (error) {
       console.error('Erro ao adicionar o livro:', error);
       alert('Erro ao adicionar o livro.');

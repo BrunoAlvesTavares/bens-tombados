@@ -21,7 +21,7 @@ export default function AdicionarAtoLegal() {
     try {
       await axios.post(API_URL, newAtoLegal);
       alert('Ato Legal adicionado com sucesso!');
-      navigate('/');
+      navigate('/adicionar-ato-legal');
     } catch (error) {
       console.error('Erro ao adicionar o ato legal:', error);
       alert('Erro ao adicionar o ato legal.');
