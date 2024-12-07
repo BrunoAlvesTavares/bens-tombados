@@ -36,7 +36,7 @@ export default function AdicionarSubclasse() {
     try {
       await axios.post(API_URL_SUBCLASSES, newSubclasse);
       alert('Subclasse adicionada com sucesso!');
-      navigate('/');
+      navigate('/subclasse');
     } catch (error) {
       console.error('Erro ao adicionar subclasse:', error);
       alert('Erro ao adicionar subclasse.');

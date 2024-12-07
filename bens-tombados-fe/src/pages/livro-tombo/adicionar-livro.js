@@ -45,7 +45,7 @@ export default function AdicionarLivro() {
         await axios.post(API_URL, livroData);
         alert('Livro adicionado com sucesso!');
       }
-      navigate('/'); // Redireciona para a página principal após o envio
+      navigate('/livro-tombo'); // Redireciona para a página principal após o envio
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
       alert('Erro ao salvar os dados.');

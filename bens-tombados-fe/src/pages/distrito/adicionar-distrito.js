@@ -39,7 +39,7 @@ export default function AdicionarDistrito() {
     try {
       await axios.post(API_URL, newDistrito);
       alert('Distrito adicionado com sucesso!');
-      navigate('/distritos');
+      navigate('/distrito');
     } catch (error) {
       console.error('Erro ao adicionar o distrito:', error);
       alert('Erro ao adicionar o distrito.');
@@ -72,7 +72,26 @@ export default function AdicionarDistrito() {
           value={nomeDistrito}
           onChange={(e) => setNomeDistrito(e.target.value)}
           required
-          sx={{ mb: 3 }}
+          sx={{
+            mb: 3,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#BDBDBD',
+              },
+              '&:hover fieldset': {
+                borderColor: '#BDBDBD',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#D50032',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#BDBDBD',
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: '#D50032',
+            },
+          }}
         />
         <TextField
           select
@@ -81,8 +100,27 @@ export default function AdicionarDistrito() {
           value={municipio}
           onChange={(e) => setMunicipio(e.target.value)}
           required
-          sx={{ mb: 3 }}
           disabled={loadingMunicipios}
+          sx={{
+            mb: 3,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#BDBDBD',
+              },
+              '&:hover fieldset': {
+                borderColor: '#BDBDBD',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#D50032',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#BDBDBD',
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: '#D50032',
+            },
+          }}
         >
           {loadingMunicipios ? (
             <MenuItem value="">

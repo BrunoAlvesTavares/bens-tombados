@@ -95,7 +95,7 @@ export default function AdicionarProcesso() {
       const response = await axios.post(API_URL_PROCESSOS, newProcesso);
       console.log('Processo criado:', response.data);
       alert('Processo adicionado com sucesso!');
-      navigate('/'); // Redireciona após sucesso
+      navigate('/processo'); // Redireciona após sucesso
     } catch (error) {
       console.error('Erro ao adicionar processo:', error.response?.data || error.message);
       alert('Erro ao adicionar processo.');

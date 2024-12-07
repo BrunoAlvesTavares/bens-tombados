@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,6 +20,7 @@ export default function AdicionarClasse() {
   const [nomeClasse, setNomeClasse] = useState('');
   const [selectedSubclasses, setSelectedSubclasses] = useState([]);
   const [subclassesOptions, setSubclassesOptions] = useState([]);
+  const [error, setError] = useState(false); // Adiciona estado de erro para validação
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +40,11 @@ export default function AdicionarClasse() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (selectedSubclasses.length === 0) {
+      setError(true); // Define erro se nenhuma subclasse for selecionada
+      return;
+    }
+
     const newClasse = {
       nomeClasse: nomeClasse,
       subclasses: selectedSubclasses,
@@ -37,7 +53,7 @@ export default function AdicionarClasse() {
     try {
       await axios.post(API_CLASSES, newClasse);
       alert('Classe adicionada com sucesso!');
-      navigate('/adicionar-classe');
+      navigate('/classe');
     } catch (error) {
       console.error('Erro ao adicionar classe:', error);
       alert('Erro ao adicionar classe.');
@@ -92,13 +108,33 @@ export default function AdicionarClasse() {
           }}
         />
 
-        <FormControl fullWidth sx={{ mb: 3 }}>
+        <FormControl
+          fullWidth
+          sx={{
+            mb: 3,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: error ? '#D50032' : '#BDBDBD',
+              },
+              '&:hover fieldset': {
+                borderColor: '#D50032',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#D50032',
+              },
+            },
+          }}
+          error={error}
+        >
           <InputLabel id="subclasses-label">Subclasses</InputLabel>
           <Select
             labelId="subclasses-label"
             multiple
             value={selectedSubclasses}
-            onChange={(e) => setSelectedSubclasses(e.target.value)}
+            onChange={(e) => {
+              setSelectedSubclasses(e.target.value);
+              setError(false); // Remove erro ao selecionar
+            }}
             renderValue={(selected) =>
               subclassesOptions
                 .filter((subclass) => selected.includes(subclass.idSubclasse))
@@ -112,6 +148,7 @@ export default function AdicionarClasse() {
               </MenuItem>
             ))}
           </Select>
+          {error && <FormHelperText>Selecione pelo menos uma subclasse.</FormHelperText>}
         </FormControl>
 
         <Button

@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const API_URL = 'http://localhost:3000/processos';
 
@@ -59,7 +60,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-        <TableCell padding="checkbox" align="center">
+        <TableCell padding="checkbox" align="left">
           <Checkbox
             color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -229,11 +230,20 @@ export default function EnhancedTable() {
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <Checkbox
                         color="error"
                         checked={selected.includes(row.idProcesso)}
                         onChange={() => handleRowClick(row.idProcesso)}
                       />
+                      <IconButton
+                        color="primary"
+                        onClick={() => navigate(`/adicionar-processo/${row.idProcesso}`)}
+                        sx={{ marginLeft: 1 }}
+                      >
+                      <EditIcon color="error" />
+                      </IconButton>
+                      </Box>
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idProcesso}

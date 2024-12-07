@@ -19,7 +19,7 @@ export default function AdicionarMunicipio() {
     try {
       await axios.post(API_URL, newMunicipio);
       alert('Município adicionado com sucesso!');
-      navigate('/adicionar-municipio'); // Redireciona para a lista de municípios após adicionar
+      navigate('/municipio'); // Redireciona para a lista de municípios após adicionar
     } catch (error) {
       console.error('Erro ao adicionar o município:', error);
       alert('Erro ao adicionar o município.');

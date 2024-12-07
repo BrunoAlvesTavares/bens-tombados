@@ -91,11 +91,16 @@ function App() {
           <Route path="/adicionar-ato-legal" element={<AdicionarAtoLegal />} />
           <Route path="/adicionar-ato-legal/:idAtoLegal" element={<AdicionarAtoLegal />} />
           <Route path="/adicionar-categoria" element={<AdicionarCategoria />} />
+          <Route path="/adicionar-categoria/:idCategoria" element={<AdicionarCategoria />} />
           <Route path="/adicionar-classe" element={<AdicionarClasse />} />
+          <Route path="/adicionar-classe/:idClasse" element={<AdicionarClasse />} />
           <Route path="/adicionar-distrito" element={<AdicionarDistrito />} />
+          <Route path="/adicionar-distrito/:idDistrito" element={<AdicionarDistrito />} />
           <Route path="/adicionar-subclasse" element={<AdicionarSubclasse />} />
+          <Route path="/adicionar-subclasse/:idSubclasse" element={<AdicionarSubclasse />} />
           <Route path="/adicionar-processo" element={<AdicionarProcesso />} />
           <Route path="/adicionar-municipio" element={<AdicionarMunicipio />} />
+          <Route path="/adicionar-municipio/:idMunicipio" element={<AdicionarMunicipio />} />
         </Routes>
       </div>
     </Router>
