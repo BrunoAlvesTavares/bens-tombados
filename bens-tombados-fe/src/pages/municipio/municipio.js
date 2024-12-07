@@ -12,10 +12,12 @@ import {
   Paper,
   Checkbox,
   Fab,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 
 const API_URL = 'http://localhost:3000/municipios';
@@ -48,7 +50,7 @@ function EnhancedTableHead(props) {
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
         <TableCell padding="checkbox" align="center">
           <Checkbox
-            color="primary"
+            color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -120,6 +122,22 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
+  const handleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selected.map((id) => axios.delete(`${API_URL}/${id}`)));
+      setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.idMunicipio)));
+      setSelected([]);
+    } catch (error) {
+      console.error('Erro ao excluir dados:', error);
+    }
+  };
+
   const visibleRows = React.useMemo(
     () =>
       rows
@@ -179,10 +197,15 @@ export default function EnhancedTable() {
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
-                      <Checkbox
-                        color="primary"
+                    <Checkbox
+                        color="error"
                         checked={selected.includes(row.idMunicipio)}
-                        onChange={() => {}}
+                        onChange={() => handleSelect(row.idMunicipio)}
+                        sx={{
+                          '&.Mui-checked': {
+                            color: '#D50032',
+                          },
+                        }}
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
@@ -206,6 +229,15 @@ export default function EnhancedTable() {
           sx={{ borderTop: '1px solid #ddd', backgroundColor: '#fafafa' }}
         />
       </Paper>
+      {selected.length > 0 && (
+        <IconButton
+          color="error"
+          sx={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon sx={{ fontSize: 32 }} />
+        </IconButton>
+      )}
       <Fab
         color="primary"
         sx={{
