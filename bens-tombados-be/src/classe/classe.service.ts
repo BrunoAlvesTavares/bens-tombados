@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Classe } from './entities/classe.entity';
 import { SubclasseService } from 'src/subclasse/subclasse.service';
+import { Subclasse } from 'src/subclasse/entities/subclasse.entity';
 
 @Injectable()
 export class ClasseService {
@@ -57,6 +58,23 @@ export class ClasseService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.classeRepository.delete(id);
+    const classe = await this.classeRepository.findOne({
+      where: { idClasse: id },
+      relations: ['subclasses'], // Carrega as Subclasses relacionadas
+    });
+  
+    if (!classe) {
+      throw new NotFoundException(`Classe com ID ${id} não encontrada.`);
+    }
+  
+    // Deleta as Subclasses associadas
+    if (classe.subclasses && classe.subclasses.length > 0) {
+      await this.classeRepository.manager
+        .getRepository(Subclasse)
+        .remove(classe.subclasses);
+    }
+  
+    // Agora deleta a Classe
+    await this.classeRepository.remove(classe);
   }
 }
