@@ -12,24 +12,30 @@ import {
   Paper,
   Checkbox,
   Fab,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const API_URL = 'http://localhost:3000/processos';
 
 const headCells = [
   { id: 'idProcesso', numeric: true, disablePadding: false, label: 'ID Processo' },
+  { id: 'nome', numeric: false, disablePadding: true, label: 'Nome' },
   { id: 'processoAno', numeric: false, disablePadding: true, label: 'Processo/Ano' },
   { id: 'denominacao', numeric: false, disablePadding: true, label: 'Denominação' },
+  { id: 'denominacaoCompleta', numeric: false, disablePadding: true, label: 'Denominação Completa' },
   { id: 'categoria', numeric: false, disablePadding: true, label: 'Categoria' },
   { id: 'municipio', numeric: false, disablePadding: true, label: 'Município' },
-  { id: 'distrito', numeric: false, disablePadding: true, label: 'Distrito' },
-  { id: 'classes', numeric: false, disablePadding: true, label: 'Classes' },
-  { id: 'subclasses', numeric: false, disablePadding: true, label: 'Subclasses' },
-  { id: 'livros', numeric: false, disablePadding: true, label: 'Livros' },
+  { id: 'distrito', numeric: false, disablePadding: true, label: 'Dístrito' },
+  { id: 'numeroDecreto', numeric: false, disablePadding: true, label: 'Número decreto' },
+  { id: 'dataDecreto', numeric: false, disablePadding: true, label: 'Data decreto' },
+  { id: 'classes', numeric: false, disablePadding: true, label: 'Classe' },
+  { id: 'livros', numeric: false, disablePadding: true, label: 'Livro' },
+  { id: 'subclasses', numeric: false, disablePadding: true, label: 'Subclasse' },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -55,7 +61,7 @@ function EnhancedTableHead(props) {
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
         <TableCell padding="checkbox" align="center">
           <Checkbox
-            color="primary"
+            color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -127,6 +133,43 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selected.map((id) => axios.delete(`${API_URL}/${id}`)));
+      setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.idProcesso)));
+      setSelected([]);
+    } catch (error) {
+      console.error('Erro ao excluir dados:', error);
+    }
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      setSelected(rows.map((row) => row.idProcesso));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const handleRowClick = (rowId) => {
+    const selectedIndex = selected.indexOf(rowId);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, rowId);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
   const visibleRows = React.useMemo(
     () =>
       rows
@@ -139,7 +182,6 @@ export default function EnhancedTable() {
   return (
     <Box
       sx={{
-        width: '100%',
         backgroundColor: '#f5f5f5',
         p: 3,
         position: 'relative',
@@ -151,7 +193,7 @@ export default function EnhancedTable() {
       <Paper
         sx={{
           width: '100%',
-          maxWidth: '1200px',
+          maxWidth: '1700px',
           mb: 2,
           boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
           overflowX: 'auto',
@@ -165,6 +207,7 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               rowCount={rows.length}
               onRequestSort={handleRequestSort}
+              onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
               {loading ? (
@@ -187,19 +230,23 @@ export default function EnhancedTable() {
                   >
                     <TableCell padding="checkbox" align="center">
                       <Checkbox
-                        color="primary"
+                        color="error"
                         checked={selected.includes(row.idProcesso)}
-                        onChange={() => {}}
+                        onChange={() => handleRowClick(row.idProcesso)}
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idProcesso}
                     </TableCell>
+                    <TableCell align="center">{row.processoNome}</TableCell>
                     <TableCell align="center">{row.processoAno}</TableCell>
                     <TableCell align="center">{row.denominacao}</TableCell>
+                    <TableCell align="center">{row.denominacaoCompleta}</TableCell>
                     <TableCell align="center">{row.categoria?.nomeCategoria || 'Sem Categoria'}</TableCell>
                     <TableCell align="center">{row.municipio?.nomeMunicipio || 'Sem Município'}</TableCell>
                     <TableCell align="center">{row.distrito?.nomeDistrito || 'Sem Distrito'}</TableCell>
+                    <TableCell align="center">{row.atoLegal.numeroDecreto}</TableCell>
+                    <TableCell align="center">{row.atoLegal.dataDecreto}</TableCell>
                     <TableCell align="center">
                       {row.classes?.map((classe) => classe.nomeClasse).join(', ') || 'Sem Classes'}
                     </TableCell>
@@ -226,6 +273,15 @@ export default function EnhancedTable() {
           sx={{ borderTop: '1px solid #ddd', backgroundColor: '#fafafa' }}
         />
       </Paper>
+      {selected.length > 0 && (
+        <IconButton
+          color="error"
+          sx={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon sx={{ fontSize: 32 }} />
+        </IconButton>
+      )}
       <Fab
         color="primary"
         sx={{

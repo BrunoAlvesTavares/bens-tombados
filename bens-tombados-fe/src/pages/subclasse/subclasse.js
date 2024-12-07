@@ -12,11 +12,13 @@ import {
   Paper,
   Checkbox,
   Fab,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const API_URL = 'http://localhost:3000/subclasse';
 
@@ -49,7 +51,7 @@ function EnhancedTableHead(props) {
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
         <TableCell padding="checkbox" align="center">
           <Checkbox
-            color="primary"
+            color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -121,6 +123,43 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selected.map((id) => axios.delete(`${API_URL}/${id}`)));
+      setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.idSubclasse)));
+      setSelected([]);
+    } catch (error) {
+      console.error('Erro ao excluir dados:', error);
+    }
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      setSelected(rows.map((row) => row.idSubclasse));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const handleRowClick = (rowId) => {
+    const selectedIndex = selected.indexOf(rowId);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, rowId);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
   const visibleRows = React.useMemo(
     () =>
       rows
@@ -133,7 +172,6 @@ export default function EnhancedTable() {
   return (
     <Box
       sx={{
-        width: '100%',
         backgroundColor: '#f5f5f5',
         p: 3,
         position: 'relative',
@@ -159,6 +197,7 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               rowCount={rows.length}
               onRequestSort={handleRequestSort}
+              onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
               {loading ? (
@@ -181,9 +220,9 @@ export default function EnhancedTable() {
                   >
                     <TableCell padding="checkbox" align="center">
                       <Checkbox
-                        color="primary"
+                        color="error"
                         checked={selected.includes(row.idSubclasse)}
-                        onChange={() => {}}
+                        onChange={() => handleRowClick(row.idSubclasse)}
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
@@ -210,6 +249,15 @@ export default function EnhancedTable() {
           sx={{ borderTop: '1px solid #ddd', backgroundColor: '#fafafa' }}
         />
       </Paper>
+      {selected.length > 0 && (
+        <IconButton
+          color="error"
+          sx={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon sx={{ fontSize: 32 }} />
+        </IconButton>
+      )}
       <Fab
         color="primary"
         sx={{

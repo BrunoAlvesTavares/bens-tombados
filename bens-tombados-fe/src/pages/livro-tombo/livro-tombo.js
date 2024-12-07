@@ -19,6 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
+import EditIcon from '@mui/icons-material/Edit';
 
 const API_URL = 'http://localhost:3000/livros-tombo';
 
@@ -50,12 +51,17 @@ function EnhancedTableHead(props) {
   return (
 <TableHead>
   <TableRow>
-    <TableCell padding="checkbox" align="center">
+    <TableCell padding="checkbox" align="left">
       <Checkbox
         color="error"
         indeterminate={numSelected > 0 && numSelected < rowCount}
         checked={rowCount > 0 && numSelected === rowCount}
         onChange={onSelectAllClick}
+        sx={{
+          '&.Mui-checked': {
+            color: '#D50032', // Cor vermelha personalizada
+          },
+        }}
       />
     </TableCell>
     <TableCell align="center" sortDirection={orderBy === 'idLivro' ? order : false}>
@@ -149,7 +155,6 @@ export default function EnhancedTable() {
   return (
     <Box
       sx={{
-        width: '100%',
         backgroundColor: '#f5f5f5',
         p: 3,
         position: 'relative',
@@ -177,46 +182,57 @@ export default function EnhancedTable() {
               onRequestSort={handleRequestSort}
               onSelectAllClick={handleSelectAllClick}
             />
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center">
-                    Carregando...
-                  </TableCell>
-                </TableRow>
-              ) : (
-                visibleRows.map((row) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.idLivro}
-                    sx={{
-                      backgroundColor: selected.includes(row.idLivro) ? '#ffe6e6' : '',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <TableCell padding="checkbox" align="center">
-                    <Checkbox
-                      color="error" // Troca a cor padrão para vermelho
-                      checked={selected.includes(row.idLivro)}
-                      onChange={() => handleSelect(row.idLivro)}
-                      sx={{
-                      // Se você quiser garantir que a cor fique vermelha ao ser marcada
-                      '&.Mui-checked': {
-                      color: '#D50032', // Cor vermelha personalizada
-                      },
-                      }}
-                      />
-                    </TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                      {row.idLivro}
-                    </TableCell>
-                    <TableCell align="center">{row.nomeLivro}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
+<TableBody>
+  {loading ? (
+    <TableRow>
+      <TableCell colSpan={6} align="center">
+        Carregando...
+      </TableCell>
+    </TableRow>
+  ) : (
+    visibleRows.map((row) => (
+      <TableRow
+        hover
+        role="checkbox"
+        tabIndex={-1}
+        key={row.idLivro}
+        sx={{
+          backgroundColor: selected.includes(row.idLivro) ? '#ffe6e6' : '',
+          cursor: 'pointer',
+        }}
+      >
+        {/* Célula de checkbox e ícone de editar lado a lado */}
+        <TableCell padding="checkbox" align="center">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {/* Checkbox */}
+            <Checkbox
+              color="error"
+              checked={selected.includes(row.idLivro)}
+              onChange={() => handleSelect(row.idLivro)}
+              sx={{
+                '&.Mui-checked': {
+                  color: '#D50032', // Cor vermelha personalizada
+                },
+              }}
+            />
+            {/* Ícone de editar à direita da checkbox */}
+            <IconButton
+  color="primary"
+  onClick={() => navigate(`/adicionar-livro/${row.idLivro}`)} // Aqui estamos redirecionando com o ID
+  sx={{ marginLeft: 1 }} // Espaçamento entre a checkbox e o ícone
+>
+  <EditIcon color="error" />
+</IconButton>
+          </Box>
+        </TableCell>
+        <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+          {row.idLivro}
+        </TableCell>
+        <TableCell align="center">{row.nomeLivro}</TableCell>
+      </TableRow>
+    ))
+  )}
+</TableBody>
           </Table>
         </TableContainer>
         <TablePagination

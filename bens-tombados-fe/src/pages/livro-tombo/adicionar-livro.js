@@ -1,28 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/livros-tombo';
 
 export default function AdicionarLivro() {
   const [nomeLivro, setNomeLivro] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const { idLivro } = useParams(); // Recupera o ID do livro na URL
   const navigate = useNavigate();
 
+  // Carregar dados do livro se estivermos em modo de edição
+  useEffect(() => {
+    if (idLivro) {
+      // Estamos em modo de edição
+      setIsEditing(true);
+      async function fetchLivro() {
+        try {
+          const response = await axios.get(`${API_URL}/${idLivro}`);
+          setNomeLivro(response.data.nomeLivro);
+        } catch (error) {
+          console.error('Erro ao carregar os dados do livro:', error);
+          alert('Erro ao carregar os dados do livro.');
+        }
+      }
+      fetchLivro();
+    }
+  }, [idLivro]);
+
+  // Função para enviar o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newLivro = {
-      nomeLivro: nomeLivro,
-    };
+    const livroData = { nomeLivro };
 
     try {
-      await axios.post(API_URL, newLivro);
-      alert('Livro adicionado com sucesso!');
-      navigate('/adicionar-livro');
+      if (isEditing) {
+        // Atualiza o livro existente
+        await axios.put(`${API_URL}/${idLivro}`, livroData);
+        alert('Livro atualizado com sucesso!');
+      } else {
+        // Cria um novo livro
+        await axios.post(API_URL, livroData);
+        alert('Livro adicionado com sucesso!');
+      }
+      navigate('/'); // Redireciona para a página principal após o envio
     } catch (error) {
-      console.error('Erro ao adicionar o livro:', error);
-      alert('Erro ao adicionar o livro.');
+      console.error('Erro ao enviar os dados:', error);
+      alert('Erro ao salvar os dados.');
     }
   };
 
@@ -43,7 +69,7 @@ export default function AdicionarLivro() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Novo Livro
+        {isEditing ? 'Editar Livro' : 'Adicionar Novo Livro'}
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <TextField
@@ -56,20 +82,20 @@ export default function AdicionarLivro() {
             mb: 3,
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: '#BDBDBD', 
+                borderColor: '#BDBDBD',
               },
               '&:hover fieldset': {
                 borderColor: '#BDBDBD',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#D50032', 
+                borderColor: '#D50032',
               },
             },
             '& .MuiInputLabel-root': {
               color: '#BDBDBD',
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#D50032', 
+              color: '#D50032',
             },
           }}
         />
@@ -80,7 +106,7 @@ export default function AdicionarLivro() {
           fullWidth
           sx={{ backgroundColor: '#D50032', '&:hover': { backgroundColor: '#C40029' } }}
         >
-          Adicionar Livro
+          {isEditing ? 'Atualizar Livro' : 'Adicionar Livro'}
         </Button>
       </form>
     </Box>

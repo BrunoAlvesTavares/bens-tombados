@@ -87,7 +87,9 @@ function App() {
           <Route path="/subclasse" element={<SubClasse />} />
           <Route path="/processo" element={<Processo />} />
           <Route path="/adicionar-livro" element={<AdicionarLivro />} />
+          <Route path="/adicionar-livro/:idLivro" element={<AdicionarLivro />} />
           <Route path="/adicionar-ato-legal" element={<AdicionarAtoLegal />} />
+          <Route path="/adicionar-ato-legal/:idAtoLegal" element={<AdicionarAtoLegal />} />
           <Route path="/adicionar-categoria" element={<AdicionarCategoria />} />
           <Route path="/adicionar-classe" element={<AdicionarClasse />} />
           <Route path="/adicionar-distrito" element={<AdicionarDistrito />} />

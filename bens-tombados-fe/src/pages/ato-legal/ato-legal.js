@@ -19,6 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
+import EditIcon from '@mui/icons-material/Edit';
 
 const API_URL = 'http://localhost:3000/atos-legais';
 
@@ -51,7 +52,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-        <TableCell padding="checkbox" align="center">
+      <TableCell padding="checkbox" align="left">
           <Checkbox
             color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -162,7 +163,7 @@ export default function EnhancedTable() {
   return (
     <Box
       sx={{
-        width: '100%',
+
         backgroundColor: '#f5f5f5',
         p: 3,
         position: 'relative',
@@ -210,6 +211,7 @@ export default function EnhancedTable() {
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <Checkbox
                         color="error"
                         checked={selected.includes(row.idAtoLegal)}
@@ -220,6 +222,14 @@ export default function EnhancedTable() {
                           },
                         }}
                       />
+                       <IconButton
+                        color="primary"
+                        onClick={() => navigate(`/adicionar-ato-legal/${row.idAtoLegal}`)} // Aqui estamos redirecionando com o ID
+                        sx={{ marginLeft: 1 }} // Espaçamento entre a checkbox e o ícone
+                      >
+                      <EditIcon color="error" />
+                      </IconButton>
+                      </Box>
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idAtoLegal}

@@ -160,7 +160,6 @@ export default function EnhancedTable() {
   return (
     <Box
       sx={{
-        width: '100%',
         backgroundColor: '#f5f5f5',
         p: 3,
         position: 'relative',
