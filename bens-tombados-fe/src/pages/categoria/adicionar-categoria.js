@@ -7,7 +7,6 @@ const API_URL = 'http://localhost:3000/categorias';
 
 export default function AdicionarCategoria() {
   const [nomeCategoria, setNomeCategoria] = useState('');
-  const [descricao, setDescricao] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -15,7 +14,6 @@ export default function AdicionarCategoria() {
 
     const newCategoria = {
       nomeCategoria: nomeCategoria,
-      descricao: descricao,
     };
 
     try {
@@ -54,35 +52,6 @@ export default function AdicionarCategoria() {
           value={nomeCategoria}
           onChange={(e) => setNomeCategoria(e.target.value)}
           required
-          sx={{
-            mb: 3,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#BDBDBD',
-              },
-              '&:hover fieldset': {
-                borderColor: '#BDBDBD',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#D50032',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#BDBDBD',
-            },
-            '& .MuiInputLabel-root.Mui-focused': {
-              color: '#D50032',
-            },
-          }}
-        />
-        <TextField
-          label="Descrição"
-          fullWidth
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          required
-          multiline
-          rows={4}
           sx={{
             mb: 3,
             '& .MuiOutlinedInput-root': {

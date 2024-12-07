@@ -23,6 +23,12 @@ export class LivroTomboService {
     return this.livroTomboRepository.findOneBy({ idLivro: id });
   }
 
+  async findByIds(ids: number[]): Promise<LivroTombo[]> {
+    if (!ids || ids.length === 0) {
+      return [];
+    }
+  }
+
   async update(id: number, data: Partial<LivroTombo>): Promise<LivroTombo> {
     await this.livroTomboRepository.update(id, data);
     return this.livroTomboRepository.findOneBy({ idLivro: id });

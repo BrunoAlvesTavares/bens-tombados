@@ -21,6 +21,10 @@ export class CategoriaService {
     return this.categoriaRepository.find();
   }
 
+  async findById(id: number): Promise<Categoria> {
+    return this.categoriaRepository.findOne({ where: { idCategoria: id } });
+  }
+
   // Obter uma categoria pelo ID
   async findOne(id: number): Promise<Categoria> {
     return this.categoriaRepository.findOneBy({ idCategoria: id });

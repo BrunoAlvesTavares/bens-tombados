@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subclasse } from './entities/subclasse.entity';
+import { Classe } from 'src/classe/entities/classe.entity';
 
 @Injectable()
 export class SubclasseService {
@@ -11,7 +12,9 @@ export class SubclasseService {
   ) {}
 
   findAll(): Promise<Subclasse[]> {
-    return this.subclasseRepository.find();
+    return this.subclasseRepository.find({
+      relations: ['classe'],
+    });
   }
 
   findOne(id: number): Promise<Subclasse> {
@@ -37,7 +40,13 @@ export class SubclasseService {
     return subclasses;
   }
 
-  async create(subclasse: Subclasse): Promise<Subclasse> {
+  async create(subclasse: Partial<Subclasse>): Promise<Subclasse> {
+    if (typeof subclasse.classe === 'number') {
+      subclasse.classe = { idClasse: subclasse.classe } as unknown as Classe;
+    }
+
+    console.log('Subclasse antes de salvar no repositório:', subclasse);
+
     return this.subclasseRepository.save(subclasse);
   }
 

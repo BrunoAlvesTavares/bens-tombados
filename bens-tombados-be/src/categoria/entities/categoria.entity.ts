@@ -7,7 +7,4 @@ export class Categoria {
 
   @Column({ length: 50 })
   nomeCategoria: string;
-
-  @Column({ length: 255, nullable: true })
-  descricao: string;
 }

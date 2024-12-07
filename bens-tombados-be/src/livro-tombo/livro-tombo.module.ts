@@ -8,5 +8,6 @@ import { LivroTombo } from './entities/livro-tombo.entity';
   imports: [TypeOrmModule.forFeature([LivroTombo])],
   providers: [LivroTomboService],
   controllers: [LivroTomboController],
+  exports: [LivroTomboService],
 })
 export class LivroTomboModule {}

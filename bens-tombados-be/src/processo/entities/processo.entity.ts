@@ -20,8 +20,11 @@ export class Processo {
   @PrimaryGeneratedColumn()
   idProcesso: number;
 
-  @Column({ length: 20, unique: true })
-  processoAno: string;
+  @Column({ length: 100 })
+  processoNome: string;
+
+  @Column('int')
+  processoAno: number;
 
   @Column({ length: 255 })
   denominacao: string;

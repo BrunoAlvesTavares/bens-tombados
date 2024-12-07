@@ -23,6 +23,10 @@ export class MunicipioService {
     return this.municipioRepository.findOneBy({ idMunicipio: id });
   }
 
+  async findById(id: number): Promise<Municipio> {
+    return this.municipioRepository.findOne({ where: { idMunicipio: id } });
+  }
+
   async findWhere(
     where: FindOptionsWhere<Municipio>,
   ): Promise<Municipio | null> {

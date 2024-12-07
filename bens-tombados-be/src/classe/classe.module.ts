@@ -9,5 +9,6 @@ import { SubclasseModule } from 'src/subclasse/subclasse.module';
   imports: [TypeOrmModule.forFeature([Classe]), SubclasseModule],
   providers: [ClasseService],
   controllers: [ClasseController],
+  exports: [ClasseService],
 })
 export class ClasseModule {}

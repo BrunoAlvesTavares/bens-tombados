@@ -23,7 +23,6 @@ const API_URL = 'http://localhost:3000/categorias';
 const headCells = [
   { id: 'idCategoria', numeric: true, disablePadding: false, label: 'ID Categoria' },
   { id: 'nomeCategoria', numeric: false, disablePadding: true, label: 'Nome Categoria' },
-  { id: 'descricao', numeric: false, disablePadding: true, label: 'Descrição' },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -190,7 +189,6 @@ export default function EnhancedTable() {
                       {row.idCategoria}
                     </TableCell>
                     <TableCell align="center">{row.nomeCategoria}</TableCell>
-                    <TableCell align="center">{row.descricao || 'Sem descrição'}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -214,7 +212,7 @@ export default function EnhancedTable() {
           position: 'fixed',
           bottom: 16,
           right: 16,
-          backgroundColor: '#D50032'
+          backgroundColor: '#D50032',
         }}
         onClick={() => navigate('/adicionar-categoria')}
       >

@@ -17,6 +17,8 @@ import SubClasse from './pages/subclasse/subclasse';
 import Processo from './pages/processo/processo';
 import Paper from '@mui/material/Paper'; // Importando o Paper do Material UI
 import Typography from '@mui/material/Typography'; // Importando o Typography para texto
+import AdicionarSubclasse from './pages/subclasse/adicionar-subclasse';
+import AdicionarProcesso from './pages/processo/adicionar.processo';
 
 function App() {
   return (
@@ -88,6 +90,8 @@ function App() {
           <Route path="/adicionar-categoria" element={<AdicionarCategoria />} />
           <Route path="/adicionar-classe" element={<AdicionarClasse />} />
           <Route path="/adicionar-distrito" element={<AdicionarDistrito />} />
+          <Route path="/adicionar-subclasse" element={<AdicionarSubclasse />} />
+          <Route path="/adicionar-processo" element={<AdicionarProcesso />} />
         </Routes>
       </div>
     </Router>

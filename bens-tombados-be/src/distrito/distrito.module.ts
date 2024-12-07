@@ -9,5 +9,6 @@ import { MunicipioModule } from 'src/municipio/municipio.module';
   imports: [TypeOrmModule.forFeature([Distrito]), MunicipioModule],
   controllers: [DistritoController],
   providers: [DistritoService],
+  exports: [DistritoService],
 })
 export class DistritoModule {}

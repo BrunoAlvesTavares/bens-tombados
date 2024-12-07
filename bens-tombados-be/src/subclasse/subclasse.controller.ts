@@ -25,8 +25,13 @@ export class SubclasseController {
   }
 
   @Post()
-  create(@Body() subclasse: Subclasse): Promise<Subclasse> {
-    return this.subclasseService.create(subclasse);
+  async create(@Body() body: any): Promise<Subclasse> {
+    const subclasse = {
+      ...body,
+      classe: { idClasse: body.idClasse },
+    };
+
+    return this.subclasseService.create(subclasse as Subclasse);
   }
 
   @Patch(':id')

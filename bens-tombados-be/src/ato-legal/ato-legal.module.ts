@@ -8,5 +8,6 @@ import { AtoLegal } from './entities/ato-legal.entity';
   imports: [TypeOrmModule.forFeature([AtoLegal])],
   providers: [AtoLegalService],
   controllers: [AtoLegalController],
+  exports: [AtoLegalService],
 })
 export class AtoLegalModule {}

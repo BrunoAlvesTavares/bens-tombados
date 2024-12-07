@@ -38,7 +38,13 @@ export class ClasseService {
   }
 
   async findAll(): Promise<Classe[]> {
-    return this.classeRepository.find();
+    return this.classeRepository.find({
+      relations: ['subclasses'],
+    });
+  }
+
+  async findByIds(ids: number[]): Promise<Classe[]> {
+    return this.classeRepository.findByIds(ids);
   }
 
   async findOne(id: number): Promise<Classe> {
