@@ -12,8 +12,10 @@ import {
   Paper,
   Checkbox,
   Fab,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { visuallyHidden } from '@mui/utils';
@@ -49,7 +51,7 @@ function EnhancedTableHead(props) {
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
         <TableCell padding="checkbox" align="center">
           <Checkbox
-            color="primary"
+            color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             inputProps={{ 'aria-label': 'select all classes' }}
@@ -128,6 +130,31 @@ export default function EnhancedTable() {
     [order, orderBy, page, rowsPerPage, rows]
   );
 
+  const handleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((row) => row.idClasse);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selected.map((id) => axios.delete(`${API_URL}/${id}`)));
+      setRows((prevRows) => prevRows.filter((row) => !selected.includes(row.idClasse)));
+      setSelected([]);
+    } catch (error) {
+      console.error('Erro ao excluir dados:', error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -157,6 +184,7 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               rowCount={rows.length}
               onRequestSort={handleRequestSort}
+              onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
               {loading ? (
@@ -205,6 +233,15 @@ export default function EnhancedTable() {
           sx={{ borderTop: '1px solid #ddd', backgroundColor: '#fafafa' }}
         />
       </Paper>
+      {selected.length > 0 && (
+        <IconButton
+          color="error"
+          sx={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={handleDelete}
+        >
+          <DeleteIcon sx={{ fontSize: 32 }} />
+        </IconButton>
+      )}
       <Fab
         color="primary"
         sx={{

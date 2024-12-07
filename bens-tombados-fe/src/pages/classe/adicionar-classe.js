@@ -37,7 +37,7 @@ export default function AdicionarClasse() {
     try {
       await axios.post(API_CLASSES, newClasse);
       alert('Classe adicionada com sucesso!');
-      navigate('/');
+      navigate('/adicionar-classe');
     } catch (error) {
       console.error('Erro ao adicionar classe:', error);
       alert('Erro ao adicionar classe.');

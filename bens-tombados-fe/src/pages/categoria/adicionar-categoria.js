@@ -19,7 +19,7 @@ export default function AdicionarCategoria() {
     try {
       await axios.post(API_URL, newCategoria);
       alert('Categoria adicionada com sucesso!');
-      navigate('/'); // Redireciona para a página principal após a adição
+      navigate('/adicionar-categoria'); // Redireciona para a página principal após a adição
     } catch (error) {
       console.error('Erro ao adicionar categoria:', error);
       alert('Erro ao adicionar categoria.');
