@@ -41,7 +41,7 @@ function getComparator(order, orderBy) {
 }
 
 function EnhancedTableHead(props) {
-  const { order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onSelectAllClick, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -54,6 +54,7 @@ function EnhancedTableHead(props) {
             color="error"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all classes' }}
           />
         </TableCell>
@@ -87,6 +88,7 @@ export default function EnhancedTable() {
   const navigate = useNavigate();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('idClasse');
+  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
@@ -179,7 +181,7 @@ export default function EnhancedTable() {
         <TableContainer>
           <Table size="medium">
             <EnhancedTableHead
-              numSelected={[]}
+              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               rowCount={rows.length}
@@ -201,11 +203,21 @@ export default function EnhancedTable() {
                     tabIndex={-1}
                     key={row.idClasse}
                     sx={{
+                      backgroundColor: selected.includes(row.idClasse) ? '#ffe6e6' : '',
                       cursor: 'pointer',
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
-                      <Checkbox color="primary" />
+                      <Checkbox
+                        color="error"
+                        checked={selected.includes(row.idClasse)}
+                        onChange={() => handleSelect(row.idClasse)}
+                        sx={{
+                          '&.Mui-checked': {
+                            color: '#D50032',
+                          },
+                        }}
+                      />
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idClasse}
@@ -213,7 +225,7 @@ export default function EnhancedTable() {
                     <TableCell align="center">{row.nomeClasse}</TableCell>
                     <TableCell align="center">
                       {Array.isArray(row.subclasses) && row.subclasses.length > 0
-                        ? row.subclasses.map((sub) => sub.nomeSubclasse).join(', ')
+                        ? row.subclasses.map((subclasse) => subclasse.nomeSubclasse).join(', ')
                         : 'Sem subclasses'}
                     </TableCell>
                   </TableRow>
