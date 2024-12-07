@@ -24,9 +24,12 @@ export class DistritoService {
   }
 
   async create(distrito: Partial<Distrito>) {
-    const municipio = await this.municipioService.findWhere({
-      idMunicipio: distrito.municipio as unknown as number,
-    });
+    console.log(distrito.municipio);
+    const municipio = await this.municipioService.findOne(
+      distrito.municipio as unknown as number,
+    );
+
+    console.log(municipio);
 
     if (!municipio) {
       throw new NotFoundException('Município não encontrado');

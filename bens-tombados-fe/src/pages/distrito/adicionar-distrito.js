@@ -33,13 +33,13 @@ export default function AdicionarDistrito() {
 
     const newDistrito = {
       nomeDistrito,
-      idMunicipio: municipio,
+      municipio,
     };
 
     try {
       await axios.post(API_URL, newDistrito);
       alert('Distrito adicionado com sucesso!');
-      navigate('/adicionar-distrito');
+      navigate('/distritos');
     } catch (error) {
       console.error('Erro ao adicionar o distrito:', error);
       alert('Erro ao adicionar o distrito.');
