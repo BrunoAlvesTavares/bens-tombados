@@ -9,6 +9,7 @@ import { CategoriaModule } from 'src/categoria/categoria.module';
 import { MunicipioModule } from 'src/municipio/municipio.module';
 import { AtoLegalModule } from 'src/ato-legal/ato-legal.module';
 import { LivroTomboModule } from 'src/livro-tombo/livro-tombo.module';
+import { DistritoModule } from 'src/distrito/distrito.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { LivroTomboModule } from 'src/livro-tombo/livro-tombo.module';
     MunicipioModule,
     AtoLegalModule,
     LivroTomboModule,
+    DistritoModule,
   ],
   providers: [ProcessoService],
   controllers: [ProcessoController],

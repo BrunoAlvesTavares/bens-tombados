@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { LivroTombo } from './entities/livro-tombo.entity';
 
 @Injectable()
@@ -24,9 +24,9 @@ export class LivroTomboService {
   }
 
   async findByIds(ids: number[]): Promise<LivroTombo[]> {
-    if (!ids || ids.length === 0) {
-      return [];
-    }
+    return this.livroTomboRepository.findBy({
+      idLivro: In(ids),
+    });
   }
 
   async update(id: number, data: Partial<LivroTombo>): Promise<LivroTombo> {

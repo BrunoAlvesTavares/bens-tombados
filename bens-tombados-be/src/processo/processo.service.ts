@@ -8,6 +8,7 @@ import { CategoriaService } from 'src/categoria/categoria.service';
 import { MunicipioService } from 'src/municipio/municipio.service';
 import { AtoLegalService } from 'src/ato-legal/ato-legal.service';
 import { LivroTomboService } from 'src/livro-tombo/livro-tombo.service';
+import { DistritoService } from 'src/distrito/distrito.service';
 
 @Injectable()
 export class ProcessoService {
@@ -20,6 +21,7 @@ export class ProcessoService {
     private readonly municipioService: MunicipioService,
     private readonly atoLegalService: AtoLegalService,
     private readonly livroTomboService: LivroTomboService,
+    private readonly distritoService: DistritoService,
   ) {}
 
   async create(data: Partial<Processo>): Promise<Processo> {
@@ -41,18 +43,16 @@ export class ProcessoService {
     const atoLegalIds = data.categoria as unknown as number;
     const atoLegalExistentes = await this.atoLegalService.findOne(atoLegalIds);
 
-    const livrotomboIds = data.categoria as unknown as number[];
+    const livrotomboIds = data.livros as unknown as number[];
     const livrotomboIdsExistentes =
       await this.livroTomboService.findByIds(livrotomboIds);
 
-    // const distrito = data.distrito as unknown as number;
-    // const distritoIdsExistentes = await this.distritoService.findOne(distrito);
-
-    console.log(data);
+    const distrito = data.distrito as unknown as number;
+    const distritoIdsExistentes = await this.distritoService.findOne(distrito);
 
     const novoProcesso = this.processoRepository.create({
       ...data,
-      // distrito: distritoIdsExistentes,
+      distrito: distritoIdsExistentes,
       livros: livrotomboIdsExistentes,
       atoLegal: atoLegalExistentes,
       municipio: municipioExistentes,
@@ -65,7 +65,17 @@ export class ProcessoService {
   }
 
   async findAll(): Promise<Processo[]> {
-    return this.processoRepository.find();
+    return this.processoRepository.find({
+      relations: [
+        'livros',
+        'classes',
+        'subclasses',
+        'categoria',
+        'municipio',
+        'distrito',
+        'atoLegal',
+      ],
+    });
   }
 
   async findOne(id: number): Promise<Processo> {
