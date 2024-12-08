@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/atos-legais';
@@ -8,23 +8,48 @@ const API_URL = 'http://localhost:3000/atos-legais';
 export default function AdicionarAtoLegal() {
   const [numeroDecreto, setNumeroDecreto] = useState('');
   const [dataDecreto, setDataDecreto] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const { idAtoLegal } = useParams(); // Recupera o ID na URL
   const navigate = useNavigate();
 
+  // Carregar dados do ato legal se estivermos em modo de edição
+  useEffect(() => {
+    if (idAtoLegal) {
+      setIsEditing(true);
+      async function fetchAtoLegal() {
+        try {
+          const response = await axios.get(`${API_URL}/${idAtoLegal}`);
+          setNumeroDecreto(response.data.numeroDecreto);
+          setDataDecreto(response.data.dataDecreto);
+        } catch (error) {
+          console.error('Erro ao carregar os dados do ato legal:', error);
+          alert('Erro ao carregar os dados do ato legal.');
+        }
+      }
+      fetchAtoLegal();
+    }
+  }, [idAtoLegal]);
+
+  // Função para enviar o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newAtoLegal = {
-      numeroDecreto: numeroDecreto,
-      dataDecreto: dataDecreto,
-    };
+    const atoLegalData = { numeroDecreto, dataDecreto };
 
     try {
-      await axios.post(API_URL, newAtoLegal);
-      alert('Ato Legal adicionado com sucesso!');
+      if (isEditing) {
+        // Atualiza o ato legal existente
+        await axios.put(`${API_URL}/${idAtoLegal}`, atoLegalData);
+        alert('Ato Legal atualizado com sucesso!');
+      } else {
+        // Cria um novo ato legal
+        await axios.post(API_URL, atoLegalData);
+        alert('Ato Legal adicionado com sucesso!');
+      }
       navigate('/ato-legal');
     } catch (error) {
-      console.error('Erro ao adicionar o ato legal:', error);
-      alert('Erro ao adicionar o ato legal.');
+      console.error('Erro ao enviar os dados:', error);
+      alert('Erro ao salvar os dados.');
     }
   };
 
@@ -45,7 +70,7 @@ export default function AdicionarAtoLegal() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Novo Ato Legal
+        {isEditing ? 'Editar Ato Legal' : 'Adicionar Novo Ato Legal'}
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <TextField
@@ -113,7 +138,7 @@ export default function AdicionarAtoLegal() {
           fullWidth
           sx={{ backgroundColor: '#D50032', '&:hover': { backgroundColor: '#C40029' } }}
         >
-          Adicionar Ato Legal
+          {isEditing ? 'Atualizar Ato Legal' : 'Adicionar Ato Legal'}
         </Button>
       </form>
     </Box>

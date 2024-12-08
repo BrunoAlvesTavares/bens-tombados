@@ -25,7 +25,7 @@ export class AtoLegalController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<AtoLegal> {
+  async findOne(@Param('id') id: number) {
     return this.atoLegalService.findOne(id);
   }
 

@@ -1,28 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/categorias';
 
 export default function AdicionarCategoria() {
   const [nomeCategoria, setNomeCategoria] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
+  const { idCategoria } = useParams(); // Pega o ID da URL, se estiver no modo de edição
 
+  // Função para buscar uma categoria específica
+  useEffect(() => {
+    if (idCategoria) {
+      setIsEditMode(true);
+      const fetchCategoria = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/${idCategoria}`);
+          setNomeCategoria(response.data.nomeCategoria); // Preenche o campo com o nome da categoria
+        } catch (error) {
+          console.error('Erro ao buscar a categoria:', error);
+          alert('Erro ao buscar a categoria.');
+        }
+      };
+      fetchCategoria();
+    }
+  }, [idCategoria]);
+
+  // Função para submeter o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newCategoria = {
+    const categoriaData = {
       nomeCategoria: nomeCategoria,
     };
 
     try {
-      await axios.post(API_URL, newCategoria);
-      alert('Categoria adicionada com sucesso!');
-      navigate('/categoria'); // Redireciona para a página principal após a adição
+      if (isEditMode) {
+        // Atualiza a categoria existente
+        await axios.put(`${API_URL}/${idCategoria}`, categoriaData);
+        alert('Categoria atualizada com sucesso!');
+      } else {
+        // Cria uma nova categoria
+        await axios.post(API_URL, categoriaData);
+        alert('Categoria adicionada com sucesso!');
+      }
+      navigate('/categoria'); // Redireciona para a lista de categorias após a operação
     } catch (error) {
-      console.error('Erro ao adicionar categoria:', error);
-      alert('Erro ao adicionar categoria.');
+      console.error('Erro ao salvar a categoria:', error);
+      alert(isEditMode ? 'Erro ao atualizar a categoria.' : 'Erro ao adicionar a categoria.');
     }
   };
 
@@ -43,7 +70,7 @@ export default function AdicionarCategoria() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Nova Categoria
+        {isEditMode ? 'Editar Categoria' : 'Adicionar Nova Categoria'}
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <TextField
@@ -80,7 +107,7 @@ export default function AdicionarCategoria() {
           fullWidth
           sx={{ backgroundColor: '#D50032', '&:hover': { backgroundColor: '#C40029' } }}
         >
-          Adicionar Categoria
+          {isEditMode ? 'Atualizar Categoria' : 'Adicionar Categoria'}
         </Button>
       </form>
     </Box>

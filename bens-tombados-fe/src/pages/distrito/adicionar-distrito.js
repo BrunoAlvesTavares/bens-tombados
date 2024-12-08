@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/distrito';
@@ -11,6 +11,8 @@ export default function AdicionarDistrito() {
   const [municipio, setMunicipio] = useState('');
   const [municipios, setMunicipios] = useState([]);
   const [loadingMunicipios, setLoadingMunicipios] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const { idDistrito } = useParams(); // Recupera o ID na URL
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,23 +28,46 @@ export default function AdicionarDistrito() {
     };
 
     fetchMunicipios();
-  }, []);
+
+    // Carregar dados do distrito se estivermos em modo de edição
+    if (idDistrito) {
+      setIsEditing(true);
+      async function fetchDistrito() {
+        try {
+          const response = await axios.get(`${API_URL}/${idDistrito}`);
+          setNomeDistrito(response.data.nomeDistrito);
+          setMunicipio(response.data.municipio.idMunicipio);
+        } catch (error) {
+          console.error('Erro ao carregar os dados do distrito:', error);
+          alert('Erro ao carregar os dados do distrito.');
+        }
+      }
+      fetchDistrito();
+    }
+  }, [idDistrito]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newDistrito = {
+    const distritoData = {
       nomeDistrito,
       municipio,
     };
 
     try {
-      await axios.post(API_URL, newDistrito);
-      alert('Distrito adicionado com sucesso!');
+      if (isEditing) {
+        // Atualiza o distrito existente
+        await axios.put(`${API_URL}/${idDistrito}`, distritoData);
+        alert('Distrito atualizado com sucesso!');
+      } else {
+        // Cria um novo distrito
+        await axios.post(API_URL, distritoData);
+        alert('Distrito adicionado com sucesso!');
+      }
       navigate('/distrito');
     } catch (error) {
-      console.error('Erro ao adicionar o distrito:', error);
-      alert('Erro ao adicionar o distrito.');
+      console.error('Erro ao enviar os dados:', error);
+      alert('Erro ao salvar os dados.');
     }
   };
 
@@ -63,7 +88,7 @@ export default function AdicionarDistrito() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Novo Distrito
+        {isEditing ? 'Editar Distrito' : 'Adicionar Novo Distrito'}
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <TextField
@@ -141,7 +166,7 @@ export default function AdicionarDistrito() {
           fullWidth
           sx={{ backgroundColor: '#D50032', '&:hover': { backgroundColor: '#C40029' } }}
         >
-          Adicionar Distrito
+          {isEditing ? 'Atualizar Distrito' : 'Adicionar Distrito'}
         </Button>
       </form>
     </Box>

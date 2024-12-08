@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL_SUBCLASSES = 'http://localhost:3000/subclasse';
@@ -10,10 +10,32 @@ export default function AdicionarSubclasse() {
   const [nomeSubclasse, setNomeSubclasse] = useState('');
   const [idClasse, setIdClasse] = useState('');
   const [classes, setClasses] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
+  const { idSubclasse } = useParams(); // Pega o ID da URL para editar
 
+  // Função para buscar uma subclasse específica
   useEffect(() => {
-    async function fetchClasses() {
+    if (idSubclasse) {
+      setIsEditMode(true);
+      const fetchSubclasse = async () => {
+        try {
+          const response = await axios.get(`${API_URL_SUBCLASSES}/${idSubclasse}`);
+          setNomeSubclasse(response.data.nomeSubclasse); // Preenche o campo com o nome da subclasse
+          const responseClasse = await axios.get(`${API_URL_CLASSES}/${idSubclasse}`);
+          setIdClasse(responseClasse.data.idClasse); // Preenche o campo com a classe associada
+        } catch (error) {
+          console.error('Erro ao buscar a subclasse:', error);
+          alert('Erro ao buscar a subclasse.');
+        }
+      };
+      fetchSubclasse();
+    }
+  }, [idSubclasse]);
+
+  // Função para buscar as classes disponíveis
+  useEffect(() => {
+    const fetchClasses = async () => {
       try {
         const response = await axios.get(API_URL_CLASSES);
         setClasses(response.data);
@@ -21,25 +43,33 @@ export default function AdicionarSubclasse() {
         console.error('Erro ao buscar classes:', error);
         alert('Não foi possível carregar as classes.');
       }
-    }
+    };
     fetchClasses();
   }, []);
 
+  // Função para submeter o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newSubclasse = {
+    const subclasseData = {
       nomeSubclasse,
       idClasse,
     };
 
     try {
-      await axios.post(API_URL_SUBCLASSES, newSubclasse);
-      alert('Subclasse adicionada com sucesso!');
-      navigate('/subclasse');
+      if (isEditMode) {
+        // Atualiza a subclasse existente
+        await axios.put(`${API_URL_SUBCLASSES}/${idSubclasse}`, subclasseData);
+        alert('Subclasse atualizada com sucesso!');
+      } else {
+        // Cria uma nova subclasse
+        await axios.post(API_URL_SUBCLASSES, subclasseData);
+        alert('Subclasse adicionada com sucesso!');
+      }
+      navigate('/subclasse'); // Redireciona para a lista de subclasses após a operação
     } catch (error) {
-      console.error('Erro ao adicionar subclasse:', error);
-      alert('Erro ao adicionar subclasse.');
+      console.error('Erro ao salvar a subclasse:', error);
+      alert(isEditMode ? 'Erro ao atualizar a subclasse.' : 'Erro ao adicionar a subclasse.');
     }
   };
 
@@ -60,7 +90,7 @@ export default function AdicionarSubclasse() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Nova Subclasse
+        {isEditMode ? 'Editar Subclasse' : 'Adicionar Nova Subclasse'}
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <TextField
@@ -131,7 +161,7 @@ export default function AdicionarSubclasse() {
           fullWidth
           sx={{ backgroundColor: '#D50032', '&:hover': { backgroundColor: '#C40029' } }}
         >
-          Adicionar Subclasse
+          {isEditMode ? 'Atualizar Subclasse' : 'Adicionar Subclasse'}
         </Button>
       </form>
     </Box>

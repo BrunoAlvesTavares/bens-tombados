@@ -16,7 +16,7 @@ export class AtoLegalService {
   }
 
   async findAll(): Promise<AtoLegal[]> {
-    return this.atoLegalRepository.find();
+    return await this.atoLegalRepository.find();
   }
 
   async findOne(id: number): Promise<AtoLegal> {

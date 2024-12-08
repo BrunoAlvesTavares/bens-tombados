@@ -18,7 +18,7 @@ import { SubclasseModule } from './subclasse/subclasse.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'admin',
+      password: 'root',
       database: 'tombamentopatrimonios',
       autoLoadEntities: true,
       synchronize: false,
