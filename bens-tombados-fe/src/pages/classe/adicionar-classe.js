@@ -10,18 +10,34 @@ import {
   FormControl,
   FormHelperText,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_CLASSES = 'http://localhost:3000/classes';
 const API_SUBCLASSES = 'http://localhost:3000/subclasse';
 
 export default function AdicionarClasse() {
+  const { idClasse } = useParams();
   const [nomeClasse, setNomeClasse] = useState('');
   const [selectedSubclasses, setSelectedSubclasses] = useState([]);
   const [subclassesOptions, setSubclassesOptions] = useState([]);
   const [error, setError] = useState(false); // Adiciona estado de erro para validação
   const navigate = useNavigate();
+
+  console.log(idClasse);
+
+  useEffect(() => {
+    async function fetchSubclasses() {
+      try {
+        const response = await axios.get(API_SUBCLASSES);
+        setSubclassesOptions(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar subclasses:', error);
+        alert('Erro ao carregar as opções de subclasses.');
+      }
+    };
+  })
+  
 
   useEffect(() => {
     async function fetchSubclasses() {
@@ -34,29 +50,52 @@ export default function AdicionarClasse() {
       }
     }
 
+    async function fetchClasse() {
+      if (idClasse) { // Apenas busca os dados se estiver em modo edição
+        try {
+          const response = await axios.get(`${API_CLASSES}/${idClasse}`);
+          console.log(response.data);
+          const classe = response.data;
+          setNomeClasse(classe.nomeClasse);
+          setSelectedSubclasses(classe.subclasses.map((subclasse) => subclasse.idSubclasse));
+        } catch (error) {
+          console.error('Erro ao buscar classe:', error);
+          alert('Erro ao carregar os dados da classe.');
+        }
+      }
+    }
+
     fetchSubclasses();
-  }, []);
+    fetchClasse();
+  }, [idClasse]);;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (selectedSubclasses.length === 0) {
-      setError(true); // Define erro se nenhuma subclasse for selecionada
+      setError(true);
       return;
     }
 
-    const newClasse = {
+    const classeData = {
       nomeClasse: nomeClasse,
       subclasses: selectedSubclasses,
     };
 
     try {
-      await axios.post(API_CLASSES, newClasse);
-      alert('Classe adicionada com sucesso!');
+      if (idClasse) {
+        // Atualizar classe existente
+        await axios.put(`${API_CLASSES}/${idClasse}`, classeData);
+        alert('Classe atualizada com sucesso!');
+      } else {
+        // Criar nova classe
+        await axios.post(API_CLASSES, classeData);
+        alert('Classe adicionada com sucesso!');
+      }
       navigate('/classe');
     } catch (error) {
-      console.error('Erro ao adicionar classe:', error);
-      alert('Erro ao adicionar classe.');
+      console.error('Erro ao salvar classe:', error);
+      alert('Erro ao salvar classe.');
     }
   };
 

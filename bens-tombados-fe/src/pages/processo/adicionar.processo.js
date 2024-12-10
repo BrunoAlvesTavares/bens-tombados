@@ -6,7 +6,7 @@ import {
   Typography,
   MenuItem,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL_CATEGORIAS = 'http://localhost:3000/categorias';
@@ -19,6 +19,11 @@ const API_URL_SUBCLASSES = 'http://localhost:3000/subclasse';
 const API_URL_PROCESSOS = 'http://localhost:3000/processos';
 
 export default function AdicionarProcesso() {
+  const { idProcesso } = useParams(); // Captura o ID da URL para edição
+  const navigate = useNavigate();
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Estados do formulário
   const [processoNome, setProcessoNome] = useState('');
   const [processoAno, setProcessoAno] = useState('');
   const [denominacao, setDenominacao] = useState('');
@@ -30,6 +35,8 @@ export default function AdicionarProcesso() {
   const [classes, setClasses] = useState([]);
   const [livros, setLivros] = useState([]);
   const [subclasses, setSubclasses] = useState([]);
+
+  // Estados para listas de opções
   const [categorias, setCategorias] = useState([]);
   const [municipios, setMunicipios] = useState([]);
   const [distritos, setDistritos] = useState([]);
@@ -37,10 +44,10 @@ export default function AdicionarProcesso() {
   const [todasClasses, setTodasClasses] = useState([]);
   const [todosLivros, setTodosLivros] = useState([]);
   const [todasSubclasses, setTodasSubclasses] = useState([]);
-  const navigate = useNavigate();
 
+  // Carrega os dados das opções
   useEffect(() => {
-    async function fetchData() {
+    async function fetchOptions() {
       try {
         const [
           catRes,
@@ -71,13 +78,40 @@ export default function AdicionarProcesso() {
         console.error('Erro ao carregar dados:', error);
       }
     }
-    fetchData();
-  }, []);
+
+    fetchOptions();
+
+    if (idProcesso) {
+      setIsEditMode(true);
+      fetchProcessoData();
+    }
+  }, [idProcesso]);
+
+  const fetchProcessoData = async () => {
+    try {
+      const response = await axios.get(`${API_URL_PROCESSOS}/${idProcesso}`);
+      const processo = response.data;
+
+      setProcessoNome(processo.processoNome);
+      setProcessoAno(processo.processoAno);
+      setDenominacao(processo.denominacao);
+      setDenominacaoCompleta(processo.denominacaoCompleta || '');
+      setIdCategoria(processo.categoria?.idCategoria || '');
+      setIdMunicipio(processo.municipio?.idMunicipio || '');
+      setIdDistrito(processo.distrito?.idDistrito || '');
+      setIdAtoLegal(processo.atoLegal?.idAtoLegal || '');
+      setClasses(processo.classes.map((classe) => classe.idClasse));
+      setLivros(processo.livros.map((livro) => livro.idLivro));
+      setSubclasses(processo.subclasses.map((subclasse) => subclasse.idSubclasse));
+    } catch (error) {
+      console.error('Erro ao buscar dados do processo:', error);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const newProcesso = {
+  
+    const createPayload = {
       processoNome,
       processoAno: parseInt(processoAno, 10),
       denominacao,
@@ -90,15 +124,35 @@ export default function AdicionarProcesso() {
       livros: livros.map((id) => parseInt(id, 10)),
       subclasses: subclasses.map((id) => parseInt(id, 10)),
     };
-
+  
+    // Formatação do payload para update
+    const updatePayload = {
+      processoNome,
+      processoAno: parseInt(processoAno, 10),
+      denominacao,
+      denominacaoCompleta,
+      categoria: { idCategoria: parseInt(idCategoria, 10) },
+      municipio: { idMunicipio: parseInt(idMunicipio, 10) },
+      distrito: idDistrito ? { idDistrito: parseInt(idDistrito, 10) } : null,
+      atoLegal: { idAtoLegal: parseInt(idAtoLegal, 10) },
+      classes: classes.map((id) => ({ idClasse: id })),
+      livros: livros.map((id) => ({ idLivro: id })),
+      subclasses: subclasses.map((id) => ({ idSubclasse: id })),
+    };
+  
     try {
-      const response = await axios.post(API_URL_PROCESSOS, newProcesso);
-      console.log('Processo criado:', response.data);
-      alert('Processo adicionado com sucesso!');
+      if (isEditMode) {
+        await axios.patch(`${API_URL_PROCESSOS}/${idProcesso}`, updatePayload);
+        alert('Processo atualizado com sucesso!');
+      } else {
+        // Para create, use o payload com IDs diretamente
+        await axios.post(API_URL_PROCESSOS, createPayload);
+        alert('Processo adicionado com sucesso!');
+      }
       navigate('/processo'); // Redireciona após sucesso
     } catch (error) {
-      console.error('Erro ao adicionar processo:', error.response?.data || error.message);
-      alert('Erro ao adicionar processo.');
+      console.error('Erro ao enviar dados:', error.response?.data || error.message);
+      alert('Erro ao salvar o processo.');
     }
   };
 
@@ -116,7 +170,7 @@ export default function AdicionarProcesso() {
       }}
     >
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Adicionar Novo Processo
+        {isEditMode ? 'Editar Processo' : 'Adicionar Novo Processo'}
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
@@ -264,7 +318,7 @@ export default function AdicionarProcesso() {
           ))}
         </TextField>
         <Button variant="contained" color="primary" type="submit" fullWidth>
-          Enviar
+          {isEditMode ? 'Atualizar' : 'Adicionar'}
         </Button>
       </form>
     </Box>

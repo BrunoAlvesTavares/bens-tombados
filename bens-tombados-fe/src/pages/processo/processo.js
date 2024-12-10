@@ -213,7 +213,7 @@ export default function EnhancedTable() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
+                  <TableCell colSpan={headCells.length + 1} align="center">
                     Carregando...
                   </TableCell>
                 </TableRow>
@@ -230,41 +230,51 @@ export default function EnhancedTable() {
                     }}
                   >
                     <TableCell padding="checkbox" align="center">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <Checkbox
-                        color="error"
-                        checked={selected.includes(row.idProcesso)}
-                        onChange={() => handleRowClick(row.idProcesso)}
-                      />
-                      <IconButton
-                        color="primary"
-                        onClick={() => navigate(`/adicionar-processo/${row.idProcesso}`)}
-                        sx={{ marginLeft: 1 }}
-                      >
-                      <EditIcon color="error" />
-                      </IconButton>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Checkbox
+                          color="error"
+                          checked={selected.includes(row.idProcesso)}
+                          onChange={() => handleRowClick(row.idProcesso)}
+                        />
+                        <IconButton
+                          color="primary"
+                          onClick={() => navigate(`/adicionar-processo/${row.idProcesso}`)}
+                          sx={{ marginLeft: 1 }}
+                        >
+                          <EditIcon color="error" />
+                        </IconButton>
                       </Box>
                     </TableCell>
                     <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                       {row.idProcesso}
                     </TableCell>
-                    <TableCell align="center">{row.processoNome}</TableCell>
-                    <TableCell align="center">{row.processoAno}</TableCell>
-                    <TableCell align="center">{row.denominacao}</TableCell>
-                    <TableCell align="center">{row.denominacaoCompleta}</TableCell>
-                    <TableCell align="center">{row.categoria?.nomeCategoria || 'Sem Categoria'}</TableCell>
-                    <TableCell align="center">{row.municipio?.nomeMunicipio || 'Sem Município'}</TableCell>
-                    <TableCell align="center">{row.distrito?.nomeDistrito || 'Sem Distrito'}</TableCell>
-                    <TableCell align="center">{row.atoLegal.numeroDecreto}</TableCell>
-                    <TableCell align="center">{row.atoLegal.dataDecreto}</TableCell>
+                    <TableCell align="center">{row.processoNome || 'Sem Nome'}</TableCell>
+                    <TableCell align="center">{row.processoAno || 'Sem Ano'}</TableCell>
+                    <TableCell align="center">{row.denominacao || 'Sem Denominação'}</TableCell>
+                    <TableCell align="center">{row.denominacaoCompleta || 'Sem Denominação Completa'}</TableCell>
+                    <TableCell align="center">{row.categoria || 'Sem Categoria'}</TableCell>
+                    <TableCell align="center">{row.municipio || 'Sem Município'}</TableCell>
+                    <TableCell align="center">{row.distrito || 'Sem Distrito'}</TableCell>
+                    <TableCell align="center">{row.atoLegal_numero || 'Sem Decreto'}</TableCell>
                     <TableCell align="center">
-                      {row.classes?.map((classe) => classe.nomeClasse).join(', ') || 'Sem Classes'}
+                      {row.atoLegal_data
+                        ? new Date(row.atoLegal_data).toLocaleDateString('pt-BR')
+                        : 'Sem Data'}
                     </TableCell>
                     <TableCell align="center">
-                      {row.subclasses?.map((subclasse) => subclasse.nomeSubclasse).join(', ') || 'Sem Subclasses'}
+                      {row.classes
+                        ? row.classes.split(',').map((classe) => classe.trim()).join(', ')
+                        : 'Sem Classes'}
                     </TableCell>
                     <TableCell align="center">
-                      {row.livros?.map((livro) => livro.nomeLivro).join(', ') || 'Sem Livros'}
+                      {row.subclasses
+                        ? row.subclasses.split(',').map((subclasse) => subclasse.trim()).join(', ')
+                        : 'Sem Subclasses'}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.livros
+                        ? row.livros.split(',').map((livro) => livro.trim()).join(', ')
+                        : 'Sem Livros'}
                     </TableCell>
                   </TableRow>
                 ))

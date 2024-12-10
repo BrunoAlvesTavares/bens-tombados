@@ -10,6 +10,7 @@ import { ClasseModule } from './classe/classe.module';
 import { ProcessoModule } from './processo/processo.module';
 import { DistritoModule } from './distrito/distrito.module';
 import { SubclasseModule } from './subclasse/subclasse.module';
+import { LogProcessoModule } from './log-processo/log-processo.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { SubclasseModule } from './subclasse/subclasse.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'root',
+      password: 'admin',
       database: 'tombamentopatrimonios',
       autoLoadEntities: true,
       synchronize: false,
@@ -31,6 +32,7 @@ import { SubclasseModule } from './subclasse/subclasse.module';
     ProcessoModule,
     DistritoModule,
     SubclasseModule,
+    LogProcessoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

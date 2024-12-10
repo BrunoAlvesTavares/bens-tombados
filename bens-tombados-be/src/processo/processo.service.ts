@@ -64,18 +64,8 @@ export class ProcessoService {
     return this.processoRepository.save(novoProcesso);
   }
 
-  async findAll(): Promise<Processo[]> {
-    return this.processoRepository.find({
-      relations: [
-        'livros',
-        'classes',
-        'subclasses',
-        'categoria',
-        'municipio',
-        'distrito',
-        'atoLegal',
-      ],
-    });
+  async findAll(): Promise<any[]> {
+    return this.processoRepository.query('SELECT * FROM ViewProcessosCompleta');
   }
 
   async findOne(id: number): Promise<Processo> {
@@ -83,11 +73,100 @@ export class ProcessoService {
   }
 
   async update(id: number, data: Partial<Processo>): Promise<Processo> {
-    await this.processoRepository.update(id, data);
-    return this.processoRepository.findOneBy({ idProcesso: id });
+    const processo = await this.processoRepository.findOne({
+      where: { idProcesso: id },
+      relations: [
+        'classes',
+        'subclasses',
+        'livros',
+        'categoria',
+        'municipio',
+        'distrito',
+        'atoLegal',
+      ],
+    });
+
+    console.log(data);
+    if (!processo) {
+      throw new Error('Processo não encontrado');
+    }
+
+    if (data.processoNome !== undefined)
+      processo.processoNome = data.processoNome;
+    if (data.processoAno !== undefined) processo.processoAno = data.processoAno;
+    if (data.denominacao !== undefined) processo.denominacao = data.denominacao;
+    if (data.denominacaoCompleta !== undefined)
+      processo.denominacaoCompleta = data.denominacaoCompleta;
+
+    if (data.classes) {
+      const classes = await this.classeService.findByIds(
+        data.classes as unknown as number[],
+      );
+      processo.classes = classes;
+    }
+
+    if (data.subclasses) {
+      const subclasses = await this.subclasseService.findByIds(
+        data.subclasses as unknown as number[],
+      );
+      processo.subclasses = subclasses;
+    }
+
+    if (data.livros) {
+      const livros = await this.livroTomboService.findByIds(
+        data.livros as unknown as number[],
+      );
+      processo.livros = livros;
+    }
+
+    if (data.categoria) {
+      const categoria =
+        typeof data.categoria === 'number'
+          ? await this.categoriaService.findById(data.categoria)
+          : data.categoria;
+      if (!categoria) throw new Error('Categoria não encontrada');
+      console.log(categoria);
+      processo.categoria = categoria;
+    }
+
+    if (data.municipio) {
+      const municipio =
+        typeof data.municipio === 'number'
+          ? await this.municipioService.findOne(data.municipio)
+          : data.municipio;
+      if (!municipio) throw new Error('Município não encontrado');
+      processo.municipio = municipio;
+    }
+
+    if (data.distrito) {
+      const distrito =
+        data.distrito && typeof data.distrito === 'number'
+          ? await this.distritoService.findOne(data.distrito)
+          : data.distrito || null;
+      if (data.distrito && !distrito)
+        throw new Error('Distrito não encontrado');
+      processo.distrito = distrito;
+    }
+
+    if (data.atoLegal) {
+      const atoLegal =
+        typeof data.atoLegal === 'number'
+          ? await this.atoLegalService.findOne(data.atoLegal)
+          : data.atoLegal;
+      if (!atoLegal) throw new Error('Ato Legal não encontrado');
+      processo.atoLegal = atoLegal;
+    }
+
+    return this.processoRepository.save(processo);
   }
 
   async delete(id: number): Promise<void> {
+    // Remover registros relacionados na tabela LogProcesso
+    await this.processoRepository.query(
+      `DELETE FROM LogProcesso WHERE idProcesso = ?`,
+      [id],
+    );
+
     // Remover registros relacionados na tabela Processo_Subclasse
     await this.processoRepository.query(
       `DELETE FROM Processo_Subclasse WHERE idProcesso = ?`,

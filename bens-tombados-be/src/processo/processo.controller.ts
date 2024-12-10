@@ -20,7 +20,7 @@ export class ProcessoController {
   }
 
   @Get()
-  async findAll(): Promise<Processo[]> {
+  async findAll(): Promise<any[]> {
     return this.processoService.findAll();
   }
 

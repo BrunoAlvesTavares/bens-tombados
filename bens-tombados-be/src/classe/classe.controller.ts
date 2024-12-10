@@ -4,8 +4,8 @@ import {
   Post,
   Body,
   Param,
-  Patch,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ClasseService } from './classe.service';
 import { Classe } from './entities/classe.entity';
@@ -29,7 +29,7 @@ export class ClasseController {
     return this.classeService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: number,
     @Body() data: Partial<Classe>,

@@ -20,6 +20,7 @@ import Typography from '@mui/material/Typography'; // Importando o Typography pa
 import AdicionarSubclasse from './pages/subclasse/adicionar-subclasse';
 import AdicionarProcesso from './pages/processo/adicionar.processo';
 import AdicionarMunicipio from './pages/municipio/adicionar-municipio';
+import HistoricoLogsTable from './pages/logs-processo/logs-processo';
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
           <Route path="/classe" element={<Classe />} />
           <Route path="/subclasse" element={<SubClasse />} />
           <Route path="/processo" element={<Processo />} />
+          <Route path="/historico-logs" element={<HistoricoLogsTable />} />
           <Route path="/adicionar-livro" element={<AdicionarLivro />} />
           <Route path="/adicionar-livro/:idLivro" element={<AdicionarLivro />} />
           <Route path="/adicionar-ato-legal" element={<AdicionarAtoLegal />} />
@@ -101,6 +103,7 @@ function App() {
           <Route path="/adicionar-processo" element={<AdicionarProcesso />} />
           <Route path="/adicionar-municipio" element={<AdicionarMunicipio />} />
           <Route path="/adicionar-municipio/:idMunicipio" element={<AdicionarMunicipio />} />
+          <Route path="/adicionar-processo/:idProcesso" element={<AdicionarProcesso />} />
         </Routes>
       </div>
     </Router>

@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom'; // Importar Link para navegação
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import AppsIcon from '@mui/icons-material/Apps';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import HistoryIcon from '@mui/icons-material/History'; // Ícone de Histórico
 
 export default function Header({ title }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -88,7 +89,7 @@ export default function Header({ title }) {
             <List>
               {/* Usando Link para navegação e fechando o menu ao clicar */}
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/livro-tombo" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/livro-tombo" onClick={handleClose}>
                   <ListItemIcon>
                     <BookIcon />
                   </ListItemIcon>
@@ -96,31 +97,31 @@ export default function Header({ title }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/ato-legal" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/ato-legal" onClick={handleClose}>
                   <ListItemIcon>
-                    <GavelIcon /> 
+                    <GavelIcon />
                   </ListItemIcon>
                   <ListItemText primary="Ato Legal" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/distrito" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/distrito" onClick={handleClose}>
                   <ListItemIcon>
-                    <LocationOnIcon /> 
+                    <LocationOnIcon />
                   </ListItemIcon>
                   <ListItemText primary="Distrito" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/municipio" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/municipio" onClick={handleClose}>
                   <ListItemIcon>
-                    <LocationCityIcon /> 
+                    <LocationCityIcon />
                   </ListItemIcon>
                   <ListItemText primary="Município" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/categoria" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/categoria" onClick={handleClose}>
                   <ListItemIcon>
                     <CategoryIcon /> {/* Ícone de Categoria */}
                   </ListItemIcon>
@@ -128,7 +129,7 @@ export default function Header({ title }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/classe" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/classe" onClick={handleClose}>
                   <ListItemIcon>
                     <SpaceDashboardIcon /> {/* Ícone de Categoria */}
                   </ListItemIcon>
@@ -136,7 +137,7 @@ export default function Header({ title }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/subclasse" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/subclasse" onClick={handleClose}>
                   <ListItemIcon>
                     <AppsIcon /> {/* Ícone de Categoria */}
                   </ListItemIcon>
@@ -144,11 +145,19 @@ export default function Header({ title }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/processo" onClick={handleClose}> 
+                <ListItemButton component={Link} to="/processo" onClick={handleClose}>
                   <ListItemIcon>
                     <AssignmentIcon /> {/* Ícone de Categoria */}
                   </ListItemIcon>
                   <ListItemText primary="Processo" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton component={Link} to="/historico-logs" onClick={handleClose}>
+                  <ListItemIcon>
+                    <HistoryIcon /> {/* Ícone de Histórico */}
+                  </ListItemIcon>
+                  <ListItemText primary="Histórico de processo" />
                 </ListItemButton>
               </ListItem>
             </List>

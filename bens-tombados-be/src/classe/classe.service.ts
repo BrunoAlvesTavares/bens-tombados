@@ -48,8 +48,11 @@ export class ClasseService {
     return this.classeRepository.findByIds(ids);
   }
 
-  async findOne(id: number): Promise<Classe> {
-    return this.classeRepository.findOneBy({ idClasse: id });
+  findOne(id: number) {
+    return this.classeRepository.findOne({
+      where: { idClasse: id },
+      relations: ['subclasses'],
+    });
   }
 
   async update(id: number, data: Partial<Classe>): Promise<Classe> {
