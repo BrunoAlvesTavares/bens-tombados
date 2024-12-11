@@ -70,14 +70,12 @@ export class ClasseService {
       throw new NotFoundException(`Classe com ID ${id} não encontrada.`);
     }
   
-    // Deleta as Subclasses associadas
     if (classe.subclasses && classe.subclasses.length > 0) {
       await this.classeRepository.manager
         .getRepository(Subclasse)
         .remove(classe.subclasses);
     }
   
-    // Agora deleta a Classe
     await this.classeRepository.remove(classe);
   }
 }

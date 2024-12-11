@@ -12,7 +12,7 @@ export class LogProcessoService {
 
   async findAll() {
     return this.logProcessoRepository.find({
-      relations: ['processo'], // Inclui dados relacionados do processo
+      relations: ['processo'],
       order: { dataHoraLog: 'DESC' },
     });
   }

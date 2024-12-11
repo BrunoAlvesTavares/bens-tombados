@@ -161,31 +161,26 @@ export class ProcessoService {
   }
 
   async delete(id: number): Promise<void> {
-    // Remover registros relacionados na tabela LogProcesso
     await this.processoRepository.query(
       `DELETE FROM LogProcesso WHERE idProcesso = ?`,
       [id],
     );
 
-    // Remover registros relacionados na tabela Processo_Subclasse
     await this.processoRepository.query(
       `DELETE FROM Processo_Subclasse WHERE idProcesso = ?`,
       [id],
     );
 
-    // Remover registros relacionados na tabela Processo_Classe
     await this.processoRepository.query(
       `DELETE FROM Processo_Classe WHERE idProcesso = ?`,
       [id],
     );
 
-    // Remover registros relacionados na tabela Processo_Livro
     await this.processoRepository.query(
       `DELETE FROM Processo_Livro WHERE idProcesso = ?`,
       [id],
     );
 
-    // Excluir o processo
     await this.processoRepository.delete(id);
   }
 }

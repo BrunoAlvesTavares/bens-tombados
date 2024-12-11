@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-@Entity('LogProcesso') // Nome da tabela no banco de dados
+@Entity('LogProcesso')
 export class LogProcesso {
   @PrimaryGeneratedColumn()
   idLog: number;
@@ -25,6 +25,6 @@ export class LogProcesso {
   descricao: string;
 
   @ManyToOne(() => Processo)
-  @JoinColumn({ name: 'idProcesso' }) // Chave estrangeira para o processo
+  @JoinColumn({ name: 'idProcesso' })
   processo: Processo;
 }
