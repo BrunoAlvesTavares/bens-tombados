@@ -1,5 +1,3 @@
-// src/components/header.js
-
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -29,48 +27,44 @@ import HistoryIcon from '@mui/icons-material/History'; // Ícone de Histórico
 export default function Header({ title }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  // Abrir o menu de opções ao clicar no ícone de 3 linhas
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setAnchorEl(null); // Fecha o menu
+    setAnchorEl(null);
   };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: '#D50032' }}>
         <Toolbar>
-          {/* Título agora é um link que leva à página inicial */}
           <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
             {title} {/* Título clicável */}
           </Typography>
 
-          {/* Ícone de 3 linhas */}
           <IconButton
             size="large"
             color="inherit"
             aria-label="menu"
             sx={{
               position: 'absolute',
-              right: '20px', // Fixa o ícone no canto direito
+              right: '20px',
             }}
-            onClick={handleMenu} // Abre o menu ao clicar
+            onClick={handleMenu}
           >
             <MenuIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      {/* Popover com lista de opções */}
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom', // Coloca a lista logo abaixo do cabeçalho
-          horizontal: 'right', // Alinha a lista à direita da página
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
@@ -87,7 +81,6 @@ export default function Header({ title }) {
         <Box sx={{ width: '250px' }}>
           <nav aria-label="main mailbox folders">
             <List>
-              {/* Usando Link para navegação e fechando o menu ao clicar */}
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/livro-tombo" onClick={handleClose}>
                   <ListItemIcon>
@@ -123,7 +116,7 @@ export default function Header({ title }) {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/categoria" onClick={handleClose}>
                   <ListItemIcon>
-                    <CategoryIcon /> {/* Ícone de Categoria */}
+                    <CategoryIcon />
                   </ListItemIcon>
                   <ListItemText primary="Categoria" />
                 </ListItemButton>
@@ -131,7 +124,7 @@ export default function Header({ title }) {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/classe" onClick={handleClose}>
                   <ListItemIcon>
-                    <SpaceDashboardIcon /> {/* Ícone de Categoria */}
+                    <SpaceDashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Classe" />
                 </ListItemButton>
@@ -139,7 +132,7 @@ export default function Header({ title }) {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/subclasse" onClick={handleClose}>
                   <ListItemIcon>
-                    <AppsIcon /> {/* Ícone de Categoria */}
+                    <AppsIcon />
                   </ListItemIcon>
                   <ListItemText primary="SubClasse" />
                 </ListItemButton>
@@ -147,7 +140,7 @@ export default function Header({ title }) {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/processo" onClick={handleClose}>
                   <ListItemIcon>
-                    <AssignmentIcon /> {/* Ícone de Categoria */}
+                    <AssignmentIcon />
                   </ListItemIcon>
                   <ListItemText primary="Processo" />
                 </ListItemButton>
@@ -155,7 +148,7 @@ export default function Header({ title }) {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/historico-logs" onClick={handleClose}>
                   <ListItemIcon>
-                    <HistoryIcon /> {/* Ícone de Histórico */}
+                    <HistoryIcon />
                   </ListItemIcon>
                   <ListItemText primary="Histórico de processo" />
                 </ListItemButton>

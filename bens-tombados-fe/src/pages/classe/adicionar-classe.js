@@ -21,7 +21,7 @@ export default function AdicionarClasse() {
   const [nomeClasse, setNomeClasse] = useState('');
   const [selectedSubclasses, setSelectedSubclasses] = useState([]);
   const [subclassesOptions, setSubclassesOptions] = useState([]);
-  const [error, setError] = useState(false); // Adiciona estado de erro para validação
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   console.log(idClasse);
@@ -51,7 +51,7 @@ export default function AdicionarClasse() {
     }
 
     async function fetchClasse() {
-      if (idClasse) { // Apenas busca os dados se estiver em modo edição
+      if (idClasse) {
         try {
           const response = await axios.get(`${API_CLASSES}/${idClasse}`);
           console.log(response.data);
@@ -84,7 +84,6 @@ export default function AdicionarClasse() {
 
     try {
       if (idClasse) {
-        // Atualizar classe existente
         await axios.put(`${API_CLASSES}/${idClasse}`, classeData);
         alert('Classe atualizada com sucesso!');
       } else {
@@ -172,7 +171,7 @@ export default function AdicionarClasse() {
             value={selectedSubclasses}
             onChange={(e) => {
               setSelectedSubclasses(e.target.value);
-              setError(false); // Remove erro ao selecionar
+              setError(false);
             }}
             renderValue={(selected) =>
               subclassesOptions

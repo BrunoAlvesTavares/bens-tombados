@@ -9,16 +9,15 @@ export default function AdicionarCategoria() {
   const [nomeCategoria, setNomeCategoria] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
-  const { idCategoria } = useParams(); // Pega o ID da URL, se estiver no modo de edição
+  const { idCategoria } = useParams();
 
-  // Função para buscar uma categoria específica
   useEffect(() => {
     if (idCategoria) {
       setIsEditMode(true);
       const fetchCategoria = async () => {
         try {
           const response = await axios.get(`${API_URL}/${idCategoria}`);
-          setNomeCategoria(response.data.nomeCategoria); // Preenche o campo com o nome da categoria
+          setNomeCategoria(response.data.nomeCategoria);
         } catch (error) {
           console.error('Erro ao buscar a categoria:', error);
           alert('Erro ao buscar a categoria.');
@@ -28,7 +27,6 @@ export default function AdicionarCategoria() {
     }
   }, [idCategoria]);
 
-  // Função para submeter o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -38,15 +36,13 @@ export default function AdicionarCategoria() {
 
     try {
       if (isEditMode) {
-        // Atualiza a categoria existente
         await axios.put(`${API_URL}/${idCategoria}`, categoriaData);
         alert('Categoria atualizada com sucesso!');
       } else {
-        // Cria uma nova categoria
         await axios.post(API_URL, categoriaData);
         alert('Categoria adicionada com sucesso!');
       }
-      navigate('/categoria'); // Redireciona para a lista de categorias após a operação
+      navigate('/categoria');
     } catch (error) {
       console.error('Erro ao salvar a categoria:', error);
       alert(isEditMode ? 'Erro ao atualizar a categoria.' : 'Erro ao adicionar a categoria.');

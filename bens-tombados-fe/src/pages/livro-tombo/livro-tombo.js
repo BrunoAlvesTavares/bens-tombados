@@ -23,7 +23,6 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const API_URL = 'http://localhost:3000/livros-tombo';
 
-// Função de ordenação (mantida)
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -40,7 +39,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Função de cabeçalho da tabela
 function EnhancedTableHead(props) {
   const { order, orderBy, onRequestSort, rowCount, numSelected, onSelectAllClick } = props;
 
@@ -59,7 +57,7 @@ function EnhancedTableHead(props) {
         onChange={onSelectAllClick}
         sx={{
           '&.Mui-checked': {
-            color: '#D50032', // Cor vermelha personalizada
+            color: '#D50032',
           },
         }}
       />
@@ -201,7 +199,6 @@ export default function EnhancedTable() {
           cursor: 'pointer',
         }}
       >
-        {/* Célula de checkbox e ícone de editar lado a lado */}
         <TableCell padding="checkbox" align="center">
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             {/* Checkbox */}
@@ -211,18 +208,17 @@ export default function EnhancedTable() {
               onChange={() => handleSelect(row.idLivro)}
               sx={{
                 '&.Mui-checked': {
-                  color: '#D50032', // Cor vermelha personalizada
+                  color: '#D50032', 
                 },
               }}
             />
-            {/* Ícone de editar à direita da checkbox */}
             <IconButton
-  color="primary"
-  onClick={() => navigate(`/adicionar-livro/${row.idLivro}`)} // Aqui estamos redirecionando com o ID
-  sx={{ marginLeft: 1 }} // Espaçamento entre a checkbox e o ícone
->
-  <EditIcon color="error" />
-</IconButton>
+              color="primary"
+              onClick={() => navigate(`/adicionar-livro/${row.idLivro}`)}
+              sx={{ marginLeft: 1 }}
+            >
+            <EditIcon color="error" />
+            </IconButton>
           </Box>
         </TableCell>
         <TableCell align="center" sx={{ fontWeight: 'bold' }}>

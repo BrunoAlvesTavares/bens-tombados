@@ -9,16 +9,15 @@ export default function AdicionarMunicipio() {
   const [nomeMunicipio, setNomeMunicipio] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
-  const { idMunicipio } = useParams(); // Pega o ID da URL, se estiver no modo de edição
+  const { idMunicipio } = useParams();
 
-  // Função para buscar um município específico
   useEffect(() => {
     if (idMunicipio) {
       setIsEditMode(true);
       const fetchMunicipio = async () => {
         try {
           const response = await axios.get(`${API_URL}/${idMunicipio}`);
-          setNomeMunicipio(response.data.nomeMunicipio); // Preenche o campo com o nome do município
+          setNomeMunicipio(response.data.nomeMunicipio);
         } catch (error) {
           console.error('Erro ao buscar o município:', error);
           alert('Erro ao buscar o município.');
@@ -38,15 +37,13 @@ export default function AdicionarMunicipio() {
 
     try {
       if (isEditMode) {
-        // Atualiza o município existente
         await axios.put(`${API_URL}/${idMunicipio}`, municipioData);
         alert('Município atualizado com sucesso!');
       } else {
-        // Cria um novo município
         await axios.post(API_URL, municipioData);
         alert('Município adicionado com sucesso!');
       }
-      navigate('/municipio'); // Redireciona para a lista de municípios após a operação
+      navigate('/municipio');
     } catch (error) {
       console.error('Erro ao salvar o município:', error);
       alert(isEditMode ? 'Erro ao atualizar o município.' : 'Erro ao adicionar o município.');

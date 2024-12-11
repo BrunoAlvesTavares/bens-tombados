@@ -12,7 +12,7 @@ export default function AdicionarDistrito() {
   const [municipios, setMunicipios] = useState([]);
   const [loadingMunicipios, setLoadingMunicipios] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const { idDistrito } = useParams(); // Recupera o ID na URL
+  const { idDistrito } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +29,6 @@ export default function AdicionarDistrito() {
 
     fetchMunicipios();
 
-    // Carregar dados do distrito se estivermos em modo de edição
     if (idDistrito) {
       setIsEditing(true);
       async function fetchDistrito() {
@@ -56,11 +55,9 @@ export default function AdicionarDistrito() {
 
     try {
       if (isEditing) {
-        // Atualiza o distrito existente
         await axios.put(`${API_URL}/${idDistrito}`, distritoData);
         alert('Distrito atualizado com sucesso!');
       } else {
-        // Cria um novo distrito
         await axios.post(API_URL, distritoData);
         alert('Distrito adicionado com sucesso!');
       }

@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; // Importe as funcionalidades de roteamento
-import Header from './components/header'; // Importe o Header
-import LivroTombo from './pages/livro-tombo/livro-tombo'; // Importe o componente Livro Tombo
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Header from './components/header'; 
+import LivroTombo from './pages/livro-tombo/livro-tombo'; 
 import AdicionarLivro from './pages/livro-tombo/adicionar-livro';
-import AtoLegal from './pages/ato-legal/ato-legal'; // Importe o componente Ato Legal
+import AtoLegal from './pages/ato-legal/ato-legal'; 
 import AdicionarAtoLegal from './pages/ato-legal/adicionar-ato-legal'; 
 import Distrito from './pages/distrito/distrito';
 import Municipio from './pages/municipio/municipio';
@@ -15,8 +15,8 @@ import AdicionarClasse from './pages/classe/adicionar-classe';
 import AdicionarDistrito from './pages/distrito/adicionar-distrito';
 import SubClasse from './pages/subclasse/subclasse';
 import Processo from './pages/processo/processo';
-import Paper from '@mui/material/Paper'; // Importando o Paper do Material UI
-import Typography from '@mui/material/Typography'; // Importando o Typography para texto
+import Paper from '@mui/material/Paper'; 
+import Typography from '@mui/material/Typography'; 
 import AdicionarSubclasse from './pages/subclasse/adicionar-subclasse';
 import AdicionarProcesso from './pages/processo/adicionar.processo';
 import AdicionarMunicipio from './pages/municipio/adicionar-municipio';
@@ -28,9 +28,7 @@ function App() {
       <div className="App">
         <Header title="Bens tombados" />
         
-        {/* Defina as rotas do seu aplicativo */}
         <Routes>
-          {/* A rota "/" renderiza a página inicial */}
           <Route 
             path="/" 
             element={
@@ -40,10 +38,10 @@ function App() {
                   style={{ 
                     padding: '20px', 
                     margin: '20px', 
-                    width: '80%',  // Definindo a largura do Paper para 80% da tela
-                    maxWidth: '1200px', // Definindo a largura máxima
-                    marginLeft: 'auto', // Centralizando o Paper
-                    marginRight: 'auto' // Centralizando o Paper
+                    width: '80%', 
+                    maxWidth: '1200px',
+                    marginLeft: 'auto', 
+                    marginRight: 'auto' 
                   }}
                 >
                   <Typography variant="h4" component="h2" gutterBottom>
@@ -78,7 +76,6 @@ function App() {
             } 
           />
 
-          {/* As demais rotas */}
           <Route path="/livro-tombo" element={<LivroTombo />} />
           <Route path="/ato-legal" element={<AtoLegal />} />
           <Route path="/distrito" element={<Distrito />} />

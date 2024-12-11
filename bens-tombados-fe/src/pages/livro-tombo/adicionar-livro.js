@@ -8,13 +8,11 @@ const API_URL = 'http://localhost:3000/livros-tombo';
 export default function AdicionarLivro() {
   const [nomeLivro, setNomeLivro] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const { idLivro } = useParams(); // Recupera o ID do livro na URL
+  const { idLivro } = useParams();
   const navigate = useNavigate();
 
-  // Carregar dados do livro se estivermos em modo de edição
   useEffect(() => {
     if (idLivro) {
-      // Estamos em modo de edição
       setIsEditing(true);
       async function fetchLivro() {
         try {
@@ -28,8 +26,6 @@ export default function AdicionarLivro() {
       fetchLivro();
     }
   }, [idLivro]);
-
-  // Função para enviar o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -37,7 +33,6 @@ export default function AdicionarLivro() {
 
     try {
       if (isEditing) {
-        // Atualiza o livro existente
         await axios.put(`${API_URL}/${idLivro}`, livroData);
         alert('Livro atualizado com sucesso!');
       } else {
@@ -45,7 +40,7 @@ export default function AdicionarLivro() {
         await axios.post(API_URL, livroData);
         alert('Livro adicionado com sucesso!');
       }
-      navigate('/livro-tombo'); // Redireciona para a página principal após o envio
+      navigate('/livro-tombo');
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
       alert('Erro ao salvar os dados.');

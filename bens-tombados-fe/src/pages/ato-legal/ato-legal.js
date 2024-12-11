@@ -29,7 +29,6 @@ const headCells = [
   { id: 'dataDecreto', numeric: false, disablePadding: true, label: 'Data Decreto' },
 ];
 
-// Função para ordenação
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
   if (b[orderBy] > a[orderBy]) return 1;
@@ -42,7 +41,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Cabeçalho da tabela
 function EnhancedTableHead(props) {
   const { order, orderBy, onSelectAllClick, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -224,8 +222,8 @@ export default function EnhancedTable() {
                       />
                        <IconButton
                         color="primary"
-                        onClick={() => navigate(`/adicionar-ato-legal/${row.idAtoLegal}`)} // Aqui estamos redirecionando com o ID
-                        sx={{ marginLeft: 1 }} // Espaçamento entre a checkbox e o ícone
+                        onClick={() => navigate(`/adicionar-ato-legal/${row.idAtoLegal}`)}
+                        sx={{ marginLeft: 1 }}
                       >
                       <EditIcon color="error" />
                       </IconButton>

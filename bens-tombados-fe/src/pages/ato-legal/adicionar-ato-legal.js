@@ -9,10 +9,9 @@ export default function AdicionarAtoLegal() {
   const [numeroDecreto, setNumeroDecreto] = useState('');
   const [dataDecreto, setDataDecreto] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const { idAtoLegal } = useParams(); // Recupera o ID na URL
+  const { idAtoLegal } = useParams(); 
   const navigate = useNavigate();
 
-  // Carregar dados do ato legal se estivermos em modo de edição
   useEffect(() => {
     if (idAtoLegal) {
       setIsEditing(true);
@@ -30,7 +29,6 @@ export default function AdicionarAtoLegal() {
     }
   }, [idAtoLegal]);
 
-  // Função para enviar o formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -38,11 +36,9 @@ export default function AdicionarAtoLegal() {
 
     try {
       if (isEditing) {
-        // Atualiza o ato legal existente
         await axios.put(`${API_URL}/${idAtoLegal}`, atoLegalData);
         alert('Ato Legal atualizado com sucesso!');
       } else {
-        // Cria um novo ato legal
         await axios.post(API_URL, atoLegalData);
         alert('Ato Legal adicionado com sucesso!');
       }
